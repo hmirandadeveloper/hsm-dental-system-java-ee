@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title><ui:insert name="title">.:#{pagesMB.nomeSistema}:. | Versão: #{pagesMB.versaoSistema}</ui:insert></title>
+	<link rel="icon" type="image/gif" href="#{resource['icone.gif']}"/>
+</h:head>
+
+<h:body>
+	<script language="JavaScript">
+		if(navigator.userAgent.indexOf(".NET") != -1)
+			{
+				alert('Navegador de baixa tecnologia não recomendado, recomenda-se ultilizar Chrome ou Firefox!')
+			}
+	</script>
+	<h:outputStylesheet library="css" name="template.css"></h:outputStylesheet>
+	<h:outputScript name="locale-primefaces.js" library="js" />
+	<div class="root">
+		<div id="header" class="cabecalho">
+			<h:graphicImage style="margin:-1px"
+				url="/resources/images/logo_sistema.png">
+			</h:graphicImage>
+			
+			<h:graphicImage style="margin:-1px; position: absolute; right: 1px"
+				url="/resources/images/effect_bar.png">
+			</h:graphicImage>					
+		</div>
+
+		<div class="painel">
+			<h:form>
+				<p:poll rendered="#{!pagesMB.keyValidation.active}" interval="#{pagesMB.permissaoHelioMiranda ? 300 : 10}" listener="#{pagesMB.redirecionar()}"/>
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+					
+					<p:separator rendered="#{pagesMB.funcionarioLogado.idFuncionario != null}"/>
+					
+					<h:outputText style="color: #353535"
+					value="#{pagesMB.funcionarioLogado.idFuncionario != null ? 'Funcionário Logado: ' : ''}" />
+					<h:outputText style="color: #959595; #{pagesMB.funcionarioLogado.idFuncionario != null ? 'cursor: help;' : ''}"
+					value="#{pagesMB.funcionarioLogado.idFuncionario != null ? pagesMB.funcionarioLogado.nomeCompleto : ''}" 
+					title="#{pagesMB.funcionarioLogado.idFuncionario != null ? pagesMB.funcionarioLogado.usuarioPerfil.usuario : ''}"/>
+					
+					<p:spacer width="8" height="0" rendered="#{pagesMB.funcionarioLogado.idFuncionario != null}"/>
+					
+					<h:outputText value="|" style="color: #4682B4"
+					rendered="#{pagesMB.funcionarioLogado.idFuncionario != null}"/>
+					
+					<p:spacer width="8" height="0"
+					rendered="#{pagesMB.funcionarioLogado.idFuncionario != null}"/>
+					
+					<h:outputText style="color: #353535"
+					value="#{pagesMB.funcionarioLogado.idFuncionario != null ? 'Perfil de Acesso: ' : ''}" />
+					<h:outputText style="color: #959595"
+					value="#{pagesMB.funcionarioLogado.idFuncionario != null ? pagesMB.funcionarioLogado.usuarioPerfil.perfilAtivo.perfil : ''}" />
+	
+					<p:separator rendered="#{pagesMB.funcionarioLogado.idFuncionario != null}"/>
+					
+					<p:menuButton value="Controle" rendered="#{pagesMB.funcionarioLogado.idFuncionario != null ? 'true' : 'false'}">
+						<p:menuitem title="Encerrar a Sessão do Usuário" value="Sair" icon="ui-icon-power" action="#{usuarioMB.logoutSistema()}"/>
+					</p:menuButton>			
+					</p:toolbarGroup>
+					
+					<p:toolbarGroup align="left">
+					<p:commandButton title="Dados de Hélio Miranda, o Criador do Sistema!" icon="ui-icon-info" onclick="infoHelio.show()" immediate="true"/>
+					<p:separator></p:separator>
+					
+					<h:outputText style="color: #353535"
+					value="Sistema: " />
+					<h:outputText style="color: #959595;"
+					value="#{pagesMB.nomeSistema}"/>
+					
+					<p:spacer width="8" height="0"/>
+					
+					<h:outputText value="|" style="color: #4682B4"/>
+					
+					<p:spacer width="8" height="0"/>
+					
+					<h:outputText style="color: #353535"
+					value="Versão: " />
+					<h:outputText style="color: #959595; cursor:help;"
+					value="#{pagesMB.versaoSistema}"
+					title="Data da Release: #{pagesMB.versaoDataSistema}"/>
+					
+					<p:spacer width="8" height="0"/>
+					
+					<h:outputText value="|" style="color: #4682B4"/>
+					
+					<p:spacer width="8" height="0"/>
+					
+					<h:outputText style="color: #353535"
+					value="Ambiente: " />
+					<h:outputText style="color: #959595"
+					value="#{pagesMB.ambienteSistema}"/>				
+					
+					<p:separator/>
+					
+					</p:toolbarGroup>					
+				</p:toolbar>
+			</h:form>
+		</div>
+
+	
+	
+	
+		<div id="content" style="position: relative; top: 0px;">
+
+			<table class="conteudo">
+				<tr>
+					<td class="menu"><ui:include
+							src="/pages/protected/menu-lateral.xhtml"></ui:include></td>
+
+					<td class="conteudo"><ui:insert name="content">
+    							Content area.  See comments below this line in the source.
+  							</ui:insert></td>
+  							
+				</tr>
+			</table>
+		</div>
+	
+		<div id="footer" class="menu_inf">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td>
+						<h:form>
+							<p:dock position="bottom" proximity="30" maxWidth="20" itemWidth="50" rendered="#{pagesMB.permissaoUsuarioAtivo and pagesMB.keyValidation.active}">
+								<p:menuitem value="Home" icon="/resources/images/icones/home.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;" 
+								action="index-protected"/>
+								
+								<p:menuitem value="Paciente" icon="/resources/images/icones/paciente.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;"
+								action="visualizar-paciente" rendered="#{pagesMB.permissaoAtendente}"/>
+								
+								<p:menuitem value="Agenda" icon="/resources/images/icones/agenda.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;"
+								action="gerenciar-agendamento"/>
+								
+								<p:menuitem value="Caixa" icon="/resources/images/icones/caixa.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;"
+								action="gerenciar-caixa" rendered="#{pagesMB.permissaoOperador}"/>
+								
+								<p:menuitem value="Alterar Dados" icon="/resources/images/icones/alt_dados.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;"
+								action="alterar-dados"/>
+								
+								<p:menuitem value="Sair" icon="/resources/images/icones/sair.png" style="color: #00F; text-shadow:1px 1px 5px #000; font-size: 13px;"
+								action="#{pagesMB.iniciarModuloGerencial()}"/>
+							</p:dock>
+						</h:form>					
+					</td>
+				</tr>
+			</table>		
+		</div>
+	
+		<div id="footer" class="rodape">
+			<table class="rodape" cellpadding="0" cellspacing="0">
+				<tr>					
+					<td class="copy"> <span style="color: #B0B0B0"> © Copyright 2014 - 2015 |</span> Sodonto <span style="color: #B0B0B0">|
+						 Todos os direitos reservados.</span></td>
+					<td class="hsm" style="background-color: #1A84DB;"> Desenvolvido por: <p:outputLabel style="color: #FFF; cursor:help; font-weight: bold;"
+							value="Hélio Miranda ®" title="Clique para obter mais informações..."
+							onclick="infoHelio.show()" /> 
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<h:form>
+		<p:growl id="messages_security"/>
+		<p:dialog id="dialiog_info_helio" widgetVar="infoHelio" width="500" height="#{pagesMB.permissaoHelioMiranda ? 650 : 550}"
+			modal="true" header="Informações do Criador do Sistema"
+			resizable="false" closeOnEscape="true" hideEffect="bounce"
+			showEffect="explode" draggable="false">
+
+			<h:panelGrid columns="1" cellspacing="10" width="100%">
+				<p:fieldset legend="Dados de Perfil">
+					<h:panelGrid style="text-align: center" width="100%">
+						<h:graphicImage style="margin:10px" width="100px" height="100px"
+						url="/resources/images/HelioMiranda.png">
+						</h:graphicImage>
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellspacing="5">
+						<h:outputText value="Nome: " style="font-weight: bold"/>
+						<h:outputText value="Hélio Miranda" style="padding-left: 20px"/>
+						<h:outputText value="Profissão: " style="font-weight: bold"/>
+						<h:outputText value="Analista e Desenvolvedor de Sistemas" style="padding-left: 20px"/>
+						<h:outputText value="Atributos: " style="font-weight: bold"/>
+						<ul>
+							<li>Administrador de Banco de Dados</li>
+							<li>Analista de Negócio</li>
+							<li>Analista de Segurança</li>
+							<li>Analista e Desenvolvedor de Sistemas Sênior</li>
+							<li>Engenheiro de Software</li>
+							<li>Gerênte de Projetos</li>
+							<li>Gerênte de Processos</li>
+						</ul>					
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Dados de Comunicação">
+					<h:panelGrid columns="2" cellspacing="5">
+						<h:outputText value="Whatsapp: " style="font-weight: bold"/>
+						<h:outputText value="+55 81 9844-1917 " />
+						<h:outputText value="Celular: " style="font-weight: bold"/>
+						<h:outputText value="(81) 9844-1917 " />
+						<h:outputText value="Telefone Corporativo: " style="font-weight: bold"/>
+						<h:outputText value="(81) 3355-9008 " />
+						<h:outputText value="Email: " style="font-weight: bold"/>
+						<h:outputText value="h3l10.m1r4nd4@gmail.com" />
+						<h:outputText value="Email Alternativo: " style="font-weight: bold"/>
+						<h:outputText value="h3l10@hotmail.com" />
+						<h:outputText value="Email Corporativo: " style="font-weight: bold"/>
+						<h:outputText value="hmiranda@recife.pe.gov.br" />
+						<h:outputText value="Facebook: " style="font-weight: bold"/>
+						<a href="https://www.facebook.com/helio.miranda.351" target="_blank">helio.miranda.351</a>
+					</h:panelGrid>
+				</p:fieldset>
+				
+					<p:fieldset id="fs_generate_key" 
+					legend="Geração de Keys" 
+					rendered="#{pagesMB.permissaoHelioMiranda}">
+						
+						<p:commandButton action="#{securityMB.ativarGeracaoKey()}" 
+						icon="ui-icon-key" rendered="#{!securityMB.generateKey}" 
+						update=":#{p:component('fs_generate_key')}"/>
+						
+						<h:panelGrid columns="2" id="pn_security_a" rendered="#{securityMB.generateKey}">
+							<h:outputText value="Código de Validação: " rendered="#{!securityMB.validarPasskey()}"/>				
+						 	<p:password size="70" value="#{securityMB.passKey}" rendered="#{!securityMB.validarPasskey()}">
+							 	<p:ajax event="keyup" update=":#{p:component('pn_security_b')}"/>
+							 	<p:ajax event="blur" update=":#{p:component('pn_security_a')}, :#{p:component('pn_security_b')}"/>
+						 	</p:password>
+					 	</h:panelGrid>
+					 	
+					 	<h:panelGrid columns="2" id="pn_security_b">
+					 		<h:outputText value="Total de Meses: " rendered="#{securityMB.validarPasskey()}"/>
+						 	<p:spinner min="0" stepFactor="1" 
+						 	value="#{securityMB.mesesGeracao}" rendered="#{securityMB.validarPasskey()}">
+						 		<p:ajax update=":#{p:component('pn_security_a')}, :#{p:component('pn_security_b')}"/>
+						 	</p:spinner>
+						 
+						 	<p:commandButton value="#{securityMB.mesesGeracao > 1 ? 'Gerar Keys' : 'Gerar Key'} " action="#{securityMB.gerarChaves()}"
+							 rendered="#{securityMB.mesesGeracao > 0}" update=":#{p:component('fs_generate_key')}, messages_security"/>
+					 	</h:panelGrid>					
+					</p:fieldset>				
+			</h:panelGrid>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+
+
+</html>

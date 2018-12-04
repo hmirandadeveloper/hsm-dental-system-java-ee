@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:poll interval="2" listener="#{pagesMB.redirecionar()}"></p:poll>
+			<p:fieldset legend="Erro de Permissão" style="width: 400px; margin-left: 200px; margin-top: 50px">
+				<h:graphicImage url="/resources/images/erro_403.jpg" style="margin-left: 80px"/>
+				<p>O Usuário logado não possui acesso a esta página!!!</p>
+				<p>Redirecionando para página inicial...</p>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

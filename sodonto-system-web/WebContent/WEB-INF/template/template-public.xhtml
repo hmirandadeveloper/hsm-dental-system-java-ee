@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title><ui:insert name="title">SADGP | .:SGPM:. Sistema para Gestão de Perícias Médicas</ui:insert></title>
+	<link rel="icon" type="image/gif" href="#{resource['icone.gif']}"/>
+</h:head>
+
+<h:body>
+	<script language="JavaScript">
+		if(navigator.userAgent.indexOf(".NET") != -1)
+			{
+				alert('Navegador de baixa tecnologia não recomendado, recomenda-se ultilizar Chrome ou Firefox!')
+			}
+	</script>
+	<h:outputStylesheet library="css" name="template.css"></h:outputStylesheet>
+		<div class="root">
+			<div id="header" class="cabecalho">
+				<h:graphicImage style="margin:10px"
+					url="/resources/images/logo_sistema.png">
+				</h:graphicImage>
+			</div>
+
+			<div class="painel">
+				<h:form>
+
+					<table class="painel">
+						<tr>
+							<td class="pn_painel"></td>
+							<td class="pn_usuario"><h:outputLabel value=""
+									styleClass="usuario"></h:outputLabel></td>
+							<td></td>
+							<td class="pn_botao">
+							<p:menuButton value="Controle">
+
+							<p:menuitem value="Acesso a Usuário" icon="ui-icon-locked"
+							action="index-protected"></p:menuitem>						
+						</p:menuButton>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</div>
+
+
+			<div id="content" style="position: relative; top: 0px;">
+
+				<table class="conteudo">
+					<tr>
+						<td class="menu"><h:form>
+								<p:slideMenu style="width:210px; height:120px" backLabel="Voltar">
+									<p:submenu label="Paciente" style="height: 90px">
+										<p:menuitem value="Cadastrar Paciente"
+											action="cadastrar-paciente"
+											ajax="false" icon="ui-icon-person" />
+
+										<p:menuitem value="Informações"
+											ajax="false" icon="ui-icon-info" 
+											action="buscar-documento"/>											
+									</p:submenu>
+								</p:slideMenu>
+							</h:form></td>
+						<td class="conteudo"><ui:insert name="content">
+						
+    							Content area.  See comments below this line in the source.
+  						</ui:insert></td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="footer" class="rodape">
+				<table class="rodape" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="rodape"></td>
+						<td class="copy">© Copyright 2014 | Sodonto |
+							Todos os direitos reservados.</td>
+						<td class="hsm">| Desenvolvido por: <p:outputLabel value="Hélio Miranda"  
+						title="Clique para obter mais informações"
+						onclick="infoHelio.show()"/>   |
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<h:form>
+		<p:dialog id="dialiog_info_helio" widgetVar="infoHelio" width="500"
+			modal="true" header="Informações do Analista/Desenvolvedor"
+			resizable="false"
+			closeOnEscape="true"
+			hideEffect="clip"
+			showEffect="clip"
+			draggable="false">
+
+			<h:panelGrid columns="2" cellspacing="10">
+				<h:outputText value="Nome: " />
+				<h:outputText value="Hélio Miranda" />
+				<h:outputText value="Profissão: " />
+				<h:outputText value="Analista e Desenvolvedor de Sistemas Sênior" />
+				<h:outputText value="Celular: " />
+				<h:outputText value="(81) 9844-1917 " />
+				<h:outputText value="Telefone Corporativo: " />
+				<h:outputText value="(81) 3355-9008 " />				
+				<h:outputText value="Email: " />
+				<h:outputText value="h3l10.m1r4nd4@gmail.com" />
+				<h:outputText value="Email Alternativo: " />
+				<h:outputText value="h3l10@hotmail.com" />				
+				<h:outputText value="Email Corporativo: " />
+				<h:outputText value="hmiranda@recife.pe.gov.br" />
+				<h:outputText value="Facebook: " />
+				<a href="https://www.facebook.com/helio.miranda.351"
+				target="_blank">helio.miranda.351</a>				
+			</h:panelGrid>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+
+
+</html>

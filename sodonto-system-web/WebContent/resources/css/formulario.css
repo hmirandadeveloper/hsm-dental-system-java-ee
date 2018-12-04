@@ -1,0 +1,31 @@
+@CHARSET "ISO-8859-1";
+
+.layout
+{
+	width:100%;
+	margin-bottom: 50px;
+}
+
+.pn_layout
+{
+	text-align: right; 
+	vertical-align: middle;
+}
+
+.botao
+{
+	height: 28px;
+	font-size: 10px;
+}
+
+.bt_buscar
+{
+	width: 100%;
+	text-align: right;
+}
+
+.label
+{
+	font-weight: bold;
+}
+

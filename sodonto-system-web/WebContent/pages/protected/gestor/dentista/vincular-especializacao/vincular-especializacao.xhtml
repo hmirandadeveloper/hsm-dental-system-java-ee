@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Recursos Humanos | Dentista | Vincular Especialização" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="VINCULAR ESPECIALIZAÇÃO">
+
+				<p:dataTable id="tabela_dentista"
+					value="#{dentistaMB.dentistas}" var="dentista"
+					paginator="#{dentistaMB.dentistas.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+					emptyMessage="Nenhum dado encontrado...">
+
+					<f:facet name="header">
+			TABELA DE DENTISTAS
+			</f:facet>
+					<p:column>
+						<f:facet name="header">Nome</f:facet>
+				#{dentista.nomeCompleto}
+			</p:column>
+					<p:column>
+						<f:facet name="header">CPF</f:facet>
+				#{dentista.cpf}
+			</p:column>
+			
+					<p:column>
+						<f:facet name="header">CRO</f:facet>
+				#{dentista.croFormatado}
+			</p:column>						
+					<p:column>
+						<f:facet name="header">Estabelecimento / CNPJ</f:facet>
+				#{dentista.estabelecimentoDTO.cnpj}
+			</p:column>
+			
+					<p:column width="200">
+						<f:facet name="header">Especializações</f:facet>
+						#{especialidadeDentistaMB.getEspecializacoesDoDentista(dentista)}
+				
+			</p:column>				
+						
+					<p:column>
+						<p:commandButton value="Vincular Especialização"
+							oncomplete="dialog_dentista_especializacao_wv.show()"
+							icon="ui-icon-link"
+							action="#{especialidadeDentistaMB.vincularEspecialidade(dentista)}"
+							update=":#{p:component('dialog_dentista_especializacao')}"
+							immediate="true">
+						</p:commandButton>
+					</p:column>					
+					<f:facet name="footer">
+					Total: 
+					#{dentistaMB.dentistas.size()}
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+			
+			
+			<p:dialog id="dialog_dentista_especializacao" resizable="false" modal="true"
+				widgetVar="dialog_dentista_especializacao_wv" header="Vincular Especialização"
+				width="800" height="500">
+				<p:fieldset legend="Dados do Dentista">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="ID: " />
+						<h:outputText value="#{especialidadeDentistaMB.especialidadeDentistaDTO.dentista.idDentista}" />
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{especialidadeDentistaMB.especialidadeDentistaDTO.dentista.nomeCompleto}" />
+						<h:outputText value="CPF: " />
+						<h:outputText value="#{especialidadeDentistaMB.especialidadeDentistaDTO.dentista.cpf}" />
+						<h:outputText value="CRO: " />
+						<h:outputText value="#{especialidadeDentistaMB.especialidadeDentistaDTO.dentista.croFormatado}" />
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset legend="Dados da Especialização">
+					<h:panelGrid id="especialidade_dentista_pn" columns="3">
+						<p:outputLabel for="dentista_especializacao" value="Especialização: "/>
+						<h:selectOneMenu id="dentista_especializacao"
+							value="#{especialidadeDentistaMB.especialidadeDentistaDTO.especialidade}"
+							converter="especialidadeConverter">								
+
+							<f:selectItem itemLabel="Escolha uma opção"
+								noSelectionOption="true" />
+
+							<f:selectItems value="#{especialidadeMB.especialidadesFiltrados}" var="especialidade"
+								itemLabel="#{especialidade.nomeEspecialidade}" itemValue="#{especialidade}">
+							</f:selectItems>
+								
+							<p:ajax event="valueChange" update=":#{p:component('especialidade_dentista_pn')}"></p:ajax>
+
+						</h:selectOneMenu>							
+						<p:commandButton action="#{especialidadeDentistaMB.salvar()}" icon="ui-icon-plusthick"
+							update=":#{p:component('messages')}, :#{p:component('tabela_especialidade_dentista')},
+							:#{p:component('especialidade_dentista_pn')}, :#{p:component('tabela_dentista')}">
+								<f:actionListener binding="#{especialidadeMB.limparMB()}"/>
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Especialidades do Dentista">
+					<h:panelGrid id="tabela_especialidade_dentista_pn" columns="1" width="100%">
+						<p:dataTable id="tabela_especialidade_dentista"
+						value="#{especialidadeDentistaMB.especialidadeDentistasFiltrados}" var="especialidadeDentista"
+						paginator="#{dentistaMB.dentistas.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+						
+						<f:facet name="header">
+							TABELA DE ESPECIALIDADES
+						</f:facet>
+						
+						<p:column>
+							<f:facet name="header">Nome</f:facet>
+							#{especialidadeDentista.especialidade.nomeEspecialidade}
+						</p:column>
+						
+						<p:column style="text-align: center">
+							<p:commandButton 
+								icon="ui-icon-minusthick"
+								action="#{especialidadeDentistaMB.remover(especialidadeDentista)}"
+								update=" :#{p:component('messages')}, :#{p:component('tabela_especialidade_dentista_pn')},
+								:#{p:component('tabela_dentista')}"
+								immediate="true">
+							</p:commandButton>
+						</p:column>					
+							
+						</p:dataTable>
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<br />
+				<br />
+				<p:commandButton value="Voltar"
+					icon="ui-icon-arrowrefresh-1-w" 
+					oncomplete="dialog_dentista_especializacao_wv.hide()">
+						<f:actionListener binding="#{especialidadeMB.limparMB()}"/>
+					</p:commandButton>	
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

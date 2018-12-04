@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+				
+		<form method="post" action="j_security_check">
+			<p:fieldset legend="Autenticação" style="width: 400px; margin-left: 250px; margin-top: 100px">
+			<p>Logue-se para acessar páginas protegidas</p>
+			<h:graphicImage url="/resources/images/login.png" style="margin-left: 130px"/>
+			<h:panelGrid columns="2" cellspacing="10">
+				<h:outputLabel for="j_username" value="Usuário: " />
+				<input type="text" id="j_username" name="j_username" />
+				<h:outputLabel for="j_password" value="Senha: " />
+				<input type="password" id="j_password" name="j_password" />
+				<input type="submit" name="submit" value="Login" />
+			</h:panelGrid>
+			</p:fieldset>
+		</form>
+	</ui:define>
+</ui:composition>
+</html>

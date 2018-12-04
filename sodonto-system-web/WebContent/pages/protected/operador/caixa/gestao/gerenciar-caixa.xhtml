@@ -1,0 +1,799 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Caixa | Gerenciar Caixa" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="GERENCIAR CAIXA">	
+			<p>Preencha corretamente as informações para incluir Movimentações no Caixa</p>
+			<br />
+			<h:panelGrid id="panel_caixa" columns="1" cellpadding="2" width="100%">
+				
+				<p:fieldset legend="Informações do Usuário Logado" toggleable="true">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="ID: " />
+						<h:outputText value="#{movimentacaoMB.funcionarioLogado.idFuncionario}" />
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{movimentacaoMB.funcionarioLogado.nomeCompleto}" />
+						<h:outputText value="CPF: " />
+						<h:outputText value="#{movimentacaoMB.funcionarioLogado.cpf}" />
+						<h:outputText value="Cargo: " />
+						<h:outputText value="#{movimentacaoMB.funcionarioLogado.cargo.nomeCargo}" />
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Informações do Caixa Aberto" toggleable="true">
+					<h:panelGrid columns="2" cellpadding="5"
+					rendered="#{movimentacaoMB.caixaAberto.idCaixa != null}">
+						<h:outputText value="Estabelecimento: " />
+						<h:outputText value="#{movimentacaoMB.caixaAberto.estabelecimentoDTO.nomeEstabelecimentoFormatado}" />
+						<h:outputText value="Data: " />
+						<h:outputText value="#{movimentacaoMB.caixaAberto.dataCaixa}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>	
+						<h:outputText value="Número de Ordem: " />
+						<h:outputText value="#{movimentacaoMB.caixaAberto.numeroOrdem}" />
+						<h:outputText value="Observações: " />
+						<h:outputText value="#{movimentacaoMB.caixaAberto.obs}" />
+						<h:outputText value="Valor Total: R$ " />
+						<h:outputText value="#{movimentacaoMB.caixaAberto.valorTotal}" />						
+					</h:panelGrid>
+					<h:outputText value="Nenhum 'Caixa Aberto' para o Usuário Logado..." 
+					rendered="#{movimentacaoMB.caixaAberto.idCaixa == null}"/>
+				</p:fieldset>
+				
+				<p:fieldset legend="Informações de Movimentações" 
+				rendered="#{movimentacaoMB.caixaAberto.idCaixa != null}">
+					<h:panelGrid columns="1" width="100%">
+						<p:dataTable id="tabela_paciente"
+						value="#{movimentacaoMB.buscarPorCaixaUsuarioLogado()}" var="movimentacao"
+						paginator="#{movimentacaoMB.buscarPorCaixaUsuarioLogado().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+
+							<f:facet name="header">
+								<h:outputText value="TABELA DE MOVIMENTAÇÕES DO CAIXA"
+								title="Para remover uma movimentação cadastradda incorretamente, favor procurar um Usuário com Perfil de Gestor."/>
+								
+							</f:facet>
+							<p:column width="5%">
+								<f:facet name="header">Ordem</f:facet>
+								#{movimentacaoMB.buscarPorCaixaUsuarioLogado().indexOf(movimentacao) + 1}
+							</p:column>
+							
+							<p:column width="15%">
+								<f:facet name="header">Tipo</f:facet>
+								#{movimentacao.tipo == 'E' ? 'ENTRADA' : 'SAÍDA'}
+							</p:column>	
+							
+							<p:column width="50%">
+								<f:facet name="header">Referência</f:facet>
+								<h:outputText style="font-weight: bold; cursor: help;"
+								title="#{movimentacao.obs == '' ? '' : 'OBSERVAÇÕES: '} #{movimentacao.obs}" value="#{movimentacao.refMovimentacao}" />
+							</p:column>	
+							
+							<p:column width="20%">
+								<f:facet name="header">Valor</f:facet>
+								<h:outputText value="R$ (-) #{movimentacao.valor}" 
+								style="color:#F00" 
+								rendered="#{movimentacao.tipo == 'S' ? 'true' : 'false'}"/> 
+								<h:outputText value="R$ #{movimentacao.valor}" 
+								rendered="#{movimentacao.tipo == 'E' ? 'true' : 'false'}"/>
+							</p:column>
+							
+							<p:column width="10%" rendered="#{pagesMB.permissaoGestor}">
+							<p:commandButton action="#{movimentacaoMB.removerMovimentacao(movimentacao)}" icon="ui-icon-closethick"
+							title="Remover Movimentação"
+							update=":#{p:component('messages')}, 
+							:#{p:component('panel_caixa')}"/>								
+							</p:column>
+							
+							<f:facet name="footer">
+							Total de Movimentações: 
+							#{movimentacaoMB.buscarPorCaixaUsuarioLogado().size()}
+							   |   Valor Total do Caixa Aberto: R$ #{movimentacaoMB.caixaAberto.valorTotal} 
+							  
+							</f:facet>																												
+						</p:dataTable>
+					</h:panelGrid>
+					<br />
+					<h:panelGrid id="botoes_movimentacao_pn" columns="3">
+					
+					<p:commandButton action="#{movimentacaoMB.incluirMovimentacao()}" icon="ui-icon-script"
+					value="Pagamento de Mensalidade" oncomplete="dialog_pag_mensalidade_wv.show()"
+					update=":#{p:component('dialog_pag_mensalidade')}"
+					widgetVar="bt_pagar_mensalidade_wv"
+					onclick="bt_pagar_mensalidade_wv.disable()"/>	
+					
+					<p:commandButton action="#{movimentacaoMB.incluirMovimentacao()}" icon="ui-icon-plusthick"
+					value="Incluir Outra Movimentação" oncomplete="dialog_movimentacao_wv.show()"
+					update=":#{p:component('dialog_movimentacao')}"
+					widgetVar="bt_incluir_nova_movimentacao_wv"
+					onclick="bt_incluir_nova_movimentacao_wv.disable()"/>				
+					
+					<p:commandButton action="#{movimentacaoMB.fecharCaixaUsuarioLogado()}" icon="ui-icon-bullet"
+					value="Fechar Caixa" update=":#{p:component('panel_caixa')}, :#{p:component('messages')}">
+						<p:confirm header="Confirmação" icon="ui-icon-alert" message="Deseja realmente fechar o Caixa no Valor R$ #{movimentacaoMB.caixaAberto.valorTotal}?"/>
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+						<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>					
+					</h:panelGrid>	
+				</p:fieldset>				
+				<h:panelGrid columns="3">									
+					<p:commandButton action="abrir-caixa" icon="ui-icon-radio-on"
+						value="Abrir Caixa" immediate="true"/>	
+						
+					<p:commandButton action="visualizar-caixa" icon="ui-icon-print"
+						value="Visualizar meus Caixas" immediate="true"/>	
+						
+					<p:commandButton action="manter-caixa" icon="ui-icon-pencil"
+						value="Manter Caixas" immediate="true"/>																							
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>
+
+<!-- DIALOG - MOVIMENTAÇÃO -->
+			
+			<p:dialog id="dialog_movimentacao" resizable="false" modal="true" 
+			widgetVar="dialog_movimentacao_wv" 
+			header="INCLUIR MOVIMENTAÇÃO">
+				<p:ajax event="close" update=":#{p:component('panel_caixa')}"/>
+				<h:panelGrid columns="1" id="dialog_movimentacao_pn">
+					<p:fieldset legend="Dados da Movimentação">
+						<h:panelGrid columns="2">
+							<h:outputText value="Tipo de Movimentação: " />
+							<p:selectOneRadio value="#{movimentacaoMB.movimentacaoDTO.tipo}"
+							disabled="#{pagesMB.permissaoGestor ? 'false' : 'true'}">
+								<f:selectItem itemLabel="Entrada" itemValue="E"/>
+								<f:selectItem itemLabel="Saída" itemValue="S"/>
+							</p:selectOneRadio>
+							
+							<h:outputText value="Referência: *" />
+							<p:inputText id="paciente_nome" maxlength="50" size="50"
+							value="#{movimentacaoMB.movimentacaoDTO.refMovimentacao}" />
+							<h:outputText value="Valor: R$ *" />
+							<p:spinner stepFactor="0.05" value="#{movimentacaoMB.movimentacaoDTO.valor}" min="0"/>
+							<p:outputLabel for="movimentacao_obs" value="Observações: "/>
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="movimentacao_obs"
+								maxlength="250"
+								cols="80"
+								rows="8"
+								autoResize="false"
+								counter="movimentacao_obs_display"
+								counterTemplate="{0} caracteres restantes."
+								value="#{movimentacaoMB.movimentacaoDTO.obs}" />	
+								<h:outputText id="movimentacao_obs_display" />	
+							</h:panelGrid>						
+						</h:panelGrid>
+						
+					</p:fieldset>
+					<br />
+					<h:panelGrid columns="2">
+					<p:commandButton value="Incluir "
+							icon="ui-icon-check"
+							oncomplete="dialog_movimentacao_wv.hide()"
+							action="#{movimentacaoMB.salvar()}"
+							update=":#{p:component('messages')}, 
+							:#{p:component('panel_caixa')},
+							:#{p:component('dialog_movimentacao')}"
+							widgetVar="bt_incluir_movimentacao_wv"
+							onclick="bt_incluir_movimentacao_wv.disable()">
+					</p:commandButton>					
+										
+					<p:commandButton value="Voltar" icon="ui-icon-arrowrefresh-1-w"
+					onclick="dialog_movimentacao_wv.hide()"/>
+					</h:panelGrid>					
+				</h:panelGrid>
+			</p:dialog>	
+
+
+<!-- DIALOG - PAGAMENTO DE MENSALIDADE -->
+	
+			
+			<p:dialog id="dialog_pag_mensalidade" resizable="false" modal="true" 
+			widgetVar="dialog_pag_mensalidade_wv" 
+			header="PAGAMENTO DE MENSALIDADE" width="900"
+			minHeight="650"
+			height="650"
+			closeOnEscape="true">
+				<p:ajax event="close" update=":#{p:component('panel_caixa')}"/>
+				<h:panelGrid columns="1" id="dialog_pag_mensalidade_pn" width="100%">
+					
+					<p:poll update="pn_tb_agendamento" interval="#{pagesMB.caixaTimePoll}"/>
+					
+					<p:fieldset legend="Selecão de Agendamento" 
+					rendered="#{agendamentoMB.agendamentoDTO.idAgendamento == null}">
+					
+						<p:fieldset legend="Filtro de Busca de Agendamentos no Caixa"
+						rendered="#{agendamentoMB.agendamentoDTO.idAgendamento == null}">	
+							<h:panelGrid id="panel_filtro_agendamento" columns="4">			
+								<p:outputLabel for="nome_paciente_busca"
+									value="Nome/Sobrenome do Paciente: " />
+								<h:panelGrid columns="2">
+									<p:inputText id="nome_paciente_busca"
+										value="#{agendamentoMB.pacienteNomeFiltro}"
+										size="80"
+										maxlength="100">
+										<p:ajax event="keyup"
+											update=":#{p:component('pn_tb_agendamento')}"></p:ajax>
+									</p:inputText>
+									<p:watermark for="nome_paciente_busca"
+										value="Digite parte do NOME ou SOBRENOME do Paciente...">
+									</p:watermark>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>							
+						
+						
+						
+						<h:panelGrid id="pn_tb_agendamento" width="100%">
+							<p:dataTable id="tabela_agenda_dentista"
+							value="#{agendamentoMB.buscarPorSituacaoEData('R', pagesMB.dataAtual, pagesMB.funcionarioLogado.estabelecimentoDTO.idEstabelecimento)}" var="agendamento"
+							paginator="#{agendamentoMB.buscarPorSituacaoEData('R', pagesMB.dataAtual, pagesMB.funcionarioLogado.estabelecimentoDTO.idEstabelecimento).size() > 10 ? 'true' : 'false'}" rows="10"
+							emptyMessage="Não há pagamentos, em ABERTO, para hoje...">
+	
+								<f:facet name="header">
+									<h:outputText value="TABELA DE AGENDAMENTOS - DIA: "/>
+									<h:outputText value="#{pagesMB.dataAtual}" style="color: blue">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+									
+									<p:spacer width="10"/>
+									
+									<p:commandButton icon="ui-icon-refresh" 
+									style="border-color: #BDBDBD"
+									update=":#{p:component('pn_tb_agendamento')}"
+									title="Atualizar DADOS da Tabela"/>
+								</f:facet>
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Ordem</f:facet>
+									#{agendamentoMB.buscarPorSituacaoEData('R', pagesMB.dataAtual, pagesMB.funcionarioLogado.estabelecimentoDTO.idEstabelecimento).indexOf(agendamento) + 1}
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header"></f:facet>
+									<p:commandButton action="#{obsPacienteMB.selecionarPaciente(agendamento.paciente, 'G')}" 
+									icon="ui-icon-alert"
+									title="Visualizar Observações do Paciente: #{agendamento.paciente.nomeCompleto}"
+									oncomplete="dialog_obs_paciente_wv.show()"
+									update=":#{p:component('messages')}, 
+									:#{p:component('dialog_obs_paciente')}"/>	
+								</p:column>							
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Código Paciente</f:facet>
+										<h:outputText rendered="#{agendamento.paciente.dentistaDTO.idDentista == agendamento.dentistaAgenda.dentista.idDentista}" value="#{agendamento.paciente.idPaciente}" />
+										<h:outputText rendered="#{agendamento.paciente.dentistaDTO.idDentista != agendamento.dentistaAgenda.dentista.idDentista}" value="#{agendamento.paciente.idPaciente}" 
+										style="cursor: help; color: red; font-weight:bold" 
+										title="Paciente vinculado ao Dentista: #{agendamento.paciente.dentistaDTO.nomeComCROFormatado}"/>
+								</p:column>		
+								
+								<p:column width="20%" style="text-align: center">
+									<f:facet name="header">Nome Paciente</f:facet>
+									<h:outputText value="#{agendamento.paciente.nomeCompleto}"
+									style="cursor:help"
+									title="Telefone: #{agendamento.paciente.telResidencial}/ Celular: #{agendamento.paciente.cel01}"/> 
+								</p:column>																													
+								
+								<p:column width="10%" style="text-align: center">
+									<f:facet name="header">Data</f:facet>
+									<h:outputText value="#{agendamento.dentistaAgenda.dataAgenda}"
+									title="Agendamento para o Dentista: #{agendamento.dentistaAgenda.dentista.nomeComCROFormatado} - No Horário: #{agendamento.dentistaAgenda.intervaloTempo}"
+									style="cursor: help; font-weight: bold; color: #00F;">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+								</p:column>	
+								
+								
+								<p:column width="20%" style="text-align: center">
+									<f:facet name="header">Situação Agendamento</f:facet>
+									#{agendamento.situacao.situacao}
+								</p:column>															
+								
+								<p:column style="padding-left: 2px; padding-right: 2px;text-align: center;" width="20%">
+									
+								<!-- 2.2.00 -->
+								
+								<p:commandButton 
+								icon="ui-icon-cancel"
+								title="Cancelar Agendamento"
+								update=":#{p:component('messages')}, 
+								:#{p:component('pn_tb_agendamento')},
+								:#{p:component('dialog_cancelar_agendamento')}"
+								oncomplete="dialog_cancelar_agendamento_wv.show()"
+								rendered="#{(pagesMB.permissaoAtendente and agendamento.situacao == 'E' or agendamento.situacao == 'R')  and agendamentoMB.diaBloqueado == false}"
+								widgetVar="bt_cancelar_agendamento_wv_#{agendamento.idAgendamento}"
+								onclick="bt_cancelar_agendamento_wv_#{agendamento.idAgendamento}.disable()">
+									<f:setPropertyActionListener target="#{agendamentoMB.agendamentoDTO}" value="#{agendamento}"/>
+								</p:commandButton>								
+								
+								<p:spacer width="5" rendered="#{agendamento.situacao == 'E' or agendamento.situacao == 'R'}"/>							
+								
+								<!--  -->									
+									
+									<p:commandButton 
+									icon="ui-icon-flag"
+									title="Selecionar Agendamento"
+									oncomplete="dialog_pag_mensalidade_wv.toggleMaximize()"
+									update=":#{p:component('dialog_pag_mensalidade_pn')}"
+									rendered="#{pagesMB.permissaoOperador and agendamento.situacao == 'R' and pagesMB.igualDataAtual(agendamento.dentistaAgenda.dataAgenda) and agendamentoMB.diaBloqueado == false}"
+									widgetVar="bt_pagamento_wv_#{agendamento.idAgendamento}"
+									onclick="bt_pagamento_wv_#{agendamento.idAgendamento}.disable()">
+										<f:setPropertyActionListener target="#{agendamentoMB.agendamentoDTO}" value="#{agendamento}"/>
+									</p:commandButton>															
+								</p:column>														
+								
+								<f:facet name="footer">
+									<h:outputText value="Total de Agendamentos para Pagamento: #{agendamentoMB.buscarPorSituacaoEData('R', pagesMB.dataAtual, pagesMB.funcionarioLogado.estabelecimentoDTO.idEstabelecimento).size()}" />								  
+								</f:facet>																												
+							</p:dataTable>
+						</h:panelGrid>
+					</p:fieldset>					
+					
+					<p:fieldset legend="Dados do Agendamento" toggleable="true"
+					rendered="#{agendamentoMB.agendamentoDTO.idAgendamento != null}">
+						<h:panelGrid columns="1" cellpadding="5">
+							
+							<h:panelGrid columns="8" cellpadding="2">
+								<h:outputText value="Data: " style="font-weight: bold"/>
+								<h:outputText value="#{agendamentoMB.agendamentoDTO.dentistaAgenda.dataAgenda}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+								<h:outputText value=" | Horário: " style="font-weight: bold"/>
+								<h:outputText value=" #{agendamentoMB.agendamentoDTO.dentistaAgenda.intervaloTempo}" />
+								<h:outputText value=" | Dentista: " style="font-weight: bold"/>
+								<h:outputText value=" #{agendamentoMB.agendamentoDTO.dentistaAgenda.dentista.nomeComCROFormatado}" />
+								<h:outputText value=" | Situação: " style="font-weight: bold"/>
+								<h:outputText value="#{agendamentoMB.agendamentoDTO.situacao.situacao}" />								
+							</h:panelGrid>
+							
+							<h:panelGrid columns="4" cellpadding="2">
+								<h:outputText value="Código do Paciente: " style="font-weight: bold"/>
+								<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.idPaciente}" />
+								<h:outputText value=" |         Nome do Paciente: " style="font-weight: bold"/>
+								<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.nomeCompleto}" 
+								style="cursor: help; color: #00F" title="Telefone do Paciente: #{agendamentoMB.agendamentoDTO.paciente.telResidencial}"/>						
+							</h:panelGrid>
+							<p:commandButton icon="ui-icon-closethick" title="Remover seleção do Agendamento" 
+							action="#{agendamentoMB.limparMB()}" 
+							update=":#{p:component('dialog_pag_mensalidade_pn')}"
+							oncomplete="dialog_pag_mensalidade_wv.toggleMaximize()"
+							widgetVar="bt_remover_selecao_agendamento_wv"
+							onclick="bt_remover_selecao_agendamento_wv.disable()">
+								<f:actionListener binding="#{planoPacienteMB.limparMB()}"/>
+								<f:actionListener binding="#{planoPacienteMB.limparMB()}"/>
+							</p:commandButton>																												
+						</h:panelGrid>
+					</p:fieldset>					
+					
+					<p:fieldset legend="Selecão de Plano" 
+					rendered="#{agendamentoMB.agendamentoDTO.idAgendamento != null and planoPacienteMB.planoPacienteDTO.idPlanoPaciente == null}">
+						<h:panelGrid columns="1" width="100%">
+							<p:dataTable id="tabela_plano"
+							value="#{planoPacienteMB.buscarPorPaciente(agendamentoMB.agendamentoDTO.paciente)}" var="planoPaciente"
+							paginator="#{planoPacienteMB.buscarPorPaciente(agendamentoMB.agendamentoDTO.paciente).size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+							emptyMessage="Nenhum dado encontrado...">
+								<f:facet name="header">
+									TABELA DE PLANOS DO PACIENTE
+								</f:facet>
+									
+								<p:column style="text-align: center">
+									<f:facet name="header">Ordem</f:facet>
+										#{planoPacienteMB.buscarPorPaciente(agendamentoMB.agendamentoDTO.paciente).indexOf(planoPaciente) + 1}
+								</p:column>	
+								
+								<p:column style="text-align: center">
+									<f:facet name="header">Nome</f:facet>
+										#{planoPaciente.plano.nomePlano}
+								</p:column>	
+								
+								<p:column width="50%" style="text-align: center">
+									<f:facet name="header">Descrição</f:facet>
+										#{planoPaciente.plano.descricaoPlano}
+								</p:column>		
+								
+								<p:column style="text-align: center">
+									<f:facet name="header">Meses</f:facet>
+	
+										#{planoPaciente.plano.totalMeses}
+								</p:column>
+								
+								<p:column style="text-align: center">
+									<f:facet name="header">Valor Total (R$)</f:facet>
+										#{planoPaciente.plano.valorTotal}
+								</p:column>	
+								
+								<p:column style="text-align: center">
+									<f:facet name="header">Validade</f:facet>
+									<h:outputText value="#{planoPaciente.plano.validade}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>		
+								</p:column>
+								
+								<p:column style="text-align: center" width="12%">
+									<p:commandButton icon="ui-icon-check"
+									title="Selecionar Plano do Paciente. Planos que não estejam com as Mensalidades CARREGADAS para o Paciente, NÃO poderão ser selecionado."
+									disabled="#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPaciente.plano, planoPaciente.paciente).size() == 0}"
+									update=":#{p:component('dialog_pag_mensalidade_pn')}, :#{p:component('messages')}"
+									widgetVar="bt_selecionar_plano_wv_#{planoPaciente.idPlanoPaciente}"
+									onclick="bt_selecionar_plano_wv_#{planoPaciente.idPlanoPaciente}.disable()">
+										<f:setPropertyActionListener target="#{planoPacienteMB.planoPacienteDTO}" value="#{planoPaciente}" />
+										<f:actionListener binding="#{mensalidadePacienteMB.validarMensalidades(planoPaciente)}"/>
+									</p:commandButton>							
+								</p:column>							
+								
+								<f:facet name="footer">
+								Total de Planos do Paciente: 
+								#{planoPacienteMB.buscarPorPaciente(agendamentoMB.agendamentoDTO.paciente).size()}
+								  
+								</f:facet>																																																			
+								</p:dataTable>
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Dados do Plano"
+					rendered="#{agendamentoMB.agendamentoDTO.idAgendamento != null and planoPacienteMB.planoPacienteDTO.idPlanoPaciente != null}">
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputText value="Nome: " />
+							<h:outputText value="#{planoPacienteMB.planoPacienteDTO.plano.nomePlano}" 
+							title="Código: #{planoPacienteMB.planoPacienteDTO.plano.idPlano}"
+							style="cursor: help; color: #00F"/>
+							<h:outputText value="Total de Meses: " title="Cique para visualizar as mensalidades do Plano Selecionado."/>
+							<h:outputText value="#{planoPacienteMB.planoPacienteDTO.plano.totalMeses}" />
+							<h:outputText value="Valor Total: R$ " />
+							<h:outputText value="#{planoPacienteMB.planoPacienteDTO.plano.valorTotal}" />						
+						</h:panelGrid>
+					</p:fieldset>					
+					
+					<p:fieldset legend="Dados da Mensalidade"
+					rendered="#{agendamentoMB.agendamentoDTO.idAgendamento != null and planoPacienteMB.planoPacienteDTO.idPlanoPaciente != null}">
+						<h:panelGrid columns="1" width="100%">
+							<p:dataTable id="tabela_mensalidade_paciente"
+							value="#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPacienteMB.planoPacienteDTO.plano, planoPacienteMB.planoPacienteDTO.paciente)}" var="mensalidade"
+							paginator="#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPacienteMB.planoPacienteDTO.plano, planoPacienteMB.planoPacienteDTO.paciente).size() > 6 ? 'true' : 'false'}" rows="6"
+							emptyMessage="Nenhum dado encontrado...">
+								
+								<f:facet name="header">
+									<h:outputText value="TABELA DE MENSALIDADES DO PACIENTE: "/> 
+									
+									<h:outputText style="color: blue" value="#{agendamentoMB.agendamentoDTO.paciente.nomeCompleto}"/>
+									
+									<p:spacer width="10"/>
+									
+									<p:commandButton icon="ui-icon-arrowthick-1-e" 
+									style="border-color: #BDBDBD"
+									update=":#{p:component('dialog_pag_mensalidade_pn')},
+									:#{p:component('messages')}"
+									title="Enviar Paciente DIRETAMENTE para ATENDIMENTO"
+									rendered="#{pagesMB.permissaoGestor and agendamentoMB.agendamentoDTO.situacao == 'R'}"
+									action="#{agendamentoMB.enviarParaAtendimento(false)}"
+									/>
+																		
+								</f:facet>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Mes</f:facet>
+									#{mensalidade.planoMensalidade.mes}
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Data</f:facet>
+									<h:outputText value="#{mensalidade.dataMensalidade}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+									
+								</p:column>								
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Mes</f:facet>	
+									<h:outputText value="R$ #{mensalidade.planoMensalidade.valorMes}" rendered="#{mensalidade.planoMensalidade.valorReajustado == 0}"/>
+									<h:outputText value="R$ #{mensalidade.planoMensalidade.valorReajustado}" rendered="#{mensalidade.planoMensalidade.valorReajustado > 0}"
+									title="O Valor Mensal sofreu reajustes (Valor Original: #{mensalidade.planoMensalidade.valorMes} | Valor Reajustado: #{mensalidade.planoMensalidade.valorReajustado})"
+									style="cursor: help; color: #00F"/>
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Pago</f:facet>	
+									<h:outputText value="R$ #{mensalidade.valorPago}" />
+								</p:column>								
+								
+								<p:column width="40%" style="text-align: center">
+									<f:facet name="header">Situacao</f:facet>
+									<h:outputText value="#{mensalidade.situacao.situacao}"/>
+								</p:column>	
+								
+								
+								
+								<p:column width="15%" style="text-align: center">
+									<p:commandButton icon="ui-icon-arrowthick-1-e"
+									title="Enviar Paciente para ATENDIMENTO"
+									rendered="#{pagesMB.permissaoOperador and (mensalidade.situacao == 'P' or mensalidade.situacao == 'T') and pagesMB.igualMesAtual(mensalidade.dataMensalidade)}"
+									action="#{agendamentoMB.enviarParaAtendimento(false)}"
+									update=":#{p:component('dialog_pag_mensalidade_pn')},
+									:#{p:component('messages')}"
+									widgetVar="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento" icon="ui-icon-alert" message="Deseja enviar o Paciente para ATENDIMENTO?"/>
+									</p:commandButton>	
+									
+									<p:spacer width="5"/>								
+								
+									<p:commandButton icon="ui-icon-arrowthick-1-e"
+									title="Enviar Paciente para ATENDIMENTO (COM ABONO)"
+									rendered="#{pagesMB.permissaoOperador and (mensalidade.situacao == 'A') and pagesMB.igualMesAtual(mensalidade.dataMensalidade)}"
+									action="#{agendamentoMB.enviarParaAtendimento(true)}"
+									update=":#{p:component('dialog_pag_mensalidade_pn')},
+									:#{p:component('messages')}"
+									widgetVar="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento" icon="ui-icon-alert" message="Deseja enviar o Paciente, ABONADO, para ATENDIMENTO?"/>
+									</p:commandButton>	
+									
+									<p:spacer width="5"/>
+									
+									<p:commandButton icon="ui-icon-check"
+									title="Pagar mensalidade do Paciente"
+									rendered="#{pagesMB.permissaoOperador and mensalidade.situacao == 'E' and (pagesMB.igualMesAtual(mensalidade.dataMensalidade) or pagesMB.maiorQueMesAtual(mensalidade.dataMensalidade))}"
+									action="#{mensalidadePacienteMB.pagarMensalidade(mensalidade)}"
+									update=":#{p:component('dialog_pag_mensalidade_pn')},
+									:#{p:component('messages')}, :#{p:component('panel_caixa')}"
+									widgetVar="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento" icon="ui-icon-alert" message="Deseja Incluir o pagamento da Mensalidade?"/>
+										<f:actionListener binding="#{agendamentoMB.realizarPagamento()}"/>
+										<f:actionListener binding="#{movimentacaoMB.incluirPagamentoMensalidadePaciente(mensalidade)}"/>
+									</p:commandButton>
+									
+									<p:commandButton icon="ui-icon-notice"
+									title="Pagar mensalidade ATRASADA do Paciente"
+									rendered="#{pagesMB.permissaoOperador and mensalidade.situacao == 'D' and pagesMB.menorQueMesAtual(mensalidade.dataMensalidade)}"
+									action="#{mensalidadePacienteMB.pagarMensalidade(mensalidade)}"
+									update=":#{p:component('dialog_pag_mensalidade_pn')},
+									:#{p:component('messages')}, :#{p:component('panel_caixa')}"
+									widgetVar="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento ATRASADO" icon="ui-icon-alert" message="Deseja Incluir o pagamento ATRASADO da Mensalidade?"/>
+										<f:actionListener binding="#{agendamentoMB.realizarPagamento()}"/>
+										<f:actionListener binding="#{movimentacaoMB.incluirPagamentoMensalidadePaciente(mensalidade)}"/>
+									</p:commandButton>																										
+								</p:column>																							
+								
+								<f:facet name="footer">
+									Total de Mensalidades do Plano: 
+									#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPacienteMB.planoPacienteDTO.plano, planoPacienteMB.planoPacienteDTO.paciente).size()}
+								</f:facet>																																			
+							</p:dataTable>						
+						</h:panelGrid>
+					</p:fieldset>
+				 	
+				</h:panelGrid>
+			</p:dialog>								
+
+
+<!-- DIALOG - OBS PACIENTE -->	
+			
+			
+			<p:dialog id="dialog_obs_paciente" resizable="false" modal="true"
+				widgetVar="dialog_obs_paciente_wv" header="OBSERVAÇÕES DO PACIENTE"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="900">
+				
+				
+				<h:panelGrid id="pn_obs_paciente" columns="1" cellpadding="5">
+					<p:fieldset legend="Dados do paciente">
+						<h:panelGrid columns="1">
+							<h:outputText value="Código: #{obsPacienteMB.pacienteDTO.idPaciente}" />
+							<h:outputText value="Nome: #{obsPacienteMB.pacienteDTO.nomeCompleto}" />
+							<h:outputText value="Telefone: #{obsPacienteMB.pacienteDTO.telResidencial}" />
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Observações">
+
+						<h:panelGrid columns="2" cellpadding="2" id="pn_incluir_obs_paciente">
+							<h:outputText value="Tipo de Observação: " />
+							<h:outputText value="#{obsPacienteMB.tipoObs.tipoObs}" />										
+							<p:outputLabel for="tx_obs_paciente" value="Observação: " />
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="tx_obs_paciente"
+								maxlength="450"
+								cols="50"
+								rows="8"
+								autoResize="true"
+								counter="display_tx_obs_paciente"
+								counterTemplate="{0} caracteres restantes."
+								value="#{obsPacienteMB.obsPacienteDTO.obs}">
+									<p:ajax event="valueChange" update=":#{p:component('pn_incluir_obs_paciente')}"/>
+								</p:inputTextarea>	
+								<h:outputText id="display_tx_obs_paciente" />	
+							</h:panelGrid>
+							
+							<h:panelGrid columns="2">			
+								<p:commandButton action="#{obsPacienteMB.salvar()}" icon="ui-icon-plusthick"	
+								disabled="#{obsPacienteMB.obsPacienteDTO.obs.length() == 0}"
+								value="Incluir Observação" title="Inclui uma observação para o Paciente." update="messages, :#{p:component('pn_obs_paciente')}" />
+							</h:panelGrid>																						
+						</h:panelGrid>
+
+						<p:dataTable id="tabela_obs_paciente"
+						value="#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente()}" var="obsPaciente"
+						paginator="#{dentistaAgendaMB.dentistaAgendasFiltrados.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+							
+							<f:facet name="header">
+								TABELA DO OBSERVAÇÕES DO PACIENTE
+							</f:facet>
+							
+							<p:column>
+								<f:facet name="header">Ordem</f:facet>
+								#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente().indexOf(obsPaciente) + 1}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Data</f:facet>
+								
+								<h:outputText value="#{obsPaciente.data}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Observação</f:facet>
+								#{obsPaciente.obs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Tipo</f:facet>
+								#{obsPaciente.tipo.tipoObs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header"> 
+									<h:outputText value="Responsável" 
+									title="Funcionário responsável pelo cadastro da 'Informação de Observação'"
+									style="cursor: help"/>
+								</f:facet>
+								<h:outputText value="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nome}" 
+								title="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nomeCompleto} / #{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).cargo.nomeCargo}"
+								style="cursor: help; color: gray;"/>
+							</p:column>							
+							
+							<p:column>
+								<p:commandButton 
+								icon="ui-icon-trash"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								action="#{obsPacienteMB.removerObsPaciente(obsPaciente)}"
+								update=":#{p:component('messages')}, :#{p:component('pn_obs_paciente')}"
+								title="Remover Observação">
+								</p:commandButton>
+							</p:column>	
+							
+							<f:facet name="footer">
+								Total de Observações: 
+								#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente().size()}
+							</f:facet>																																			
+						</p:dataTable>									
+					</p:fieldset>
+					
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_obs_paciente_wv.hide()"/>					
+				</h:panelGrid>
+			</p:dialog>	
+
+<!--2.2.00-->
+<!-- DIALOG - CANCELAR AGENDAMENTO -->	
+	
+			<p:dialog id="dialog_cancelar_agendamento" resizable="false" modal="true"
+				widgetVar="dialog_cancelar_agendamento_wv" header="CANCELAR AGENDAMENTO"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="900" closable="false">	
+				
+				<h:panelGrid id="panel_cancelar_agendamento" columns="1" cellpadding="5" width="100%">
+					<p:fieldset legend="Dados do Agendamento">
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputText value="Data do Agendamento: " />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.dentistaAgenda.dataAgenda}">
+								<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</h:outputText>
+							<h:outputText value="Horário do Agendamento: " />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.dentistaAgenda.intervaloTempo}" />
+							<h:outputText value="Dentista: " />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.dentistaAgenda.dentista.nomeComCROFormatado}" />
+							<h:outputText value="Código do Paciente: " />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.idPaciente}" />							
+							<h:outputText value="Nome do Paciente: " />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.nomeCompleto}" />
+							<h:outputText value="Telefone do paciente:" />
+							<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.telResidencial}" />																												
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Dados de Observação">
+						<h:panelGrid id="pn_motivo_cancelamento_agendamento" columns="2" cellpadding="5">
+							<p:outputLabel for="tx_cancelar_agendamento" value="Motivo de Cancelamento: " />
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="tx_cancelar_agendamento"
+								maxlength="300"
+								cols="50"
+								rows="8"
+								autoResize="true"
+								counter="display_tx_cancelar_agendamento"
+								counterTemplate="{0} caracteres restantes."
+								value="#{agendamentoMB.motivoCancelamento}">
+									<p:ajax event="valueChange" update=":#{p:component('pn_motivo_cancelamento_agendamento')}"/>
+								</p:inputTextarea>	
+								<h:outputText id="display_tx_cancelar_agendamento" />	
+							</h:panelGrid>
+						</h:panelGrid>
+					</p:fieldset>							
+					<h:panelGrid columns="2">
+						<p:commandButton value="Cancelar Agendamento" icon="ui-icon-closethick"
+						action="#{agendamentoMB.cancelarAgendamento()}"
+						oncomplete="dialog_cancelar_agendamento_wv.hide()"
+						update=":#{p:component('messages')}, :#{p:component('pn_tb_agendamento')}"
+						widgetVar="bt_cancelar_agendamento_dialog_wv"
+						onclick="bt_cancelar_agendamento_dialog_wv.disable()">
+							<p:confirm header="Confirmação de Cancelamento" icon="ui-icon-alert" message="Deseja realmente CANCELAR o Agendamento do Paciente?"/>
+						</p:commandButton>	
+						
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_cancelar_agendamento_wv.hide()"/>												
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:dialog>	
+
+<!--  -->			
+			<p:spacer height="60"/>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

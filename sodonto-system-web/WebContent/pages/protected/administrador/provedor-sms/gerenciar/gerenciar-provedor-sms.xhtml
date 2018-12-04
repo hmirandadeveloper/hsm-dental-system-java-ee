@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Configurações | Sistema | Provedor SMS | Gerenciar Provedor SMS" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="SELECIONAR PROVEDOR SMS">	
+				<p>Selecione o Provedor SMS para utilização em Tempo Real pelos Usuários do Sistema</p>
+				<br />
+			
+				<h:panelGrid id="pn_tb_provedor_sms" style="width: 100%">				
+					<p:fieldset  legend="DADOS DO ATRIBUTO OPERACIONAL SELECIONADO">	
+						<h:panelGrid id="panel_provedor_sms" columns="1" cellpadding="5">
+
+							<h:panelGrid columns="2" cellspacing="5">
+								<h:outputText style="font-weight: bold" value="Título: " />
+								<h:outputText style="color: #828282" value="#{atributoOperacionalMB.atributoOperacionalSelecionado.titulo}" />
+								
+								<h:outputText style="font-weight: bold" value="Provedor SMS: " />
+								<h:outputText style="color: #828282" value="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS.nome}" />												
+							</h:panelGrid>																																	
+						</h:panelGrid>
+					</p:fieldset>					
+					
+					<br />
+					
+					<p:dataTable id="tabela_atributoOperacional" value="#{atributoOperacionalMB.provedoresSMSAsList}" var="provedorSMS"
+						paginator="#{atributoOperacionalMB.provedoresSMSAsList.size() > 5 ? 'true' : 'false'}" 
+						rows="5" emptyMessage="Nenhuma informação encontrada!"
+						paginatorAlwaysVisible="false" sortBy="#{provedorSMS.nome}"
+						paginatorPosition="bottom">
+		
+						<f:facet name="header">
+					TABELA DE PROVEDORES SMS
+					</f:facet>
+<!-- COLUNA A -->					
+						<p:column style="text-align: center; " rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS != provedorSMS}">
+							<f:facet name="header">Ordem</f:facet>
+						
+							<h:outputText style="color: #B5B5B5" 
+							value="#{atributoOperacionalMB.provedoresSMSAsList.indexOf(provedorSMS) + 1}"/>					
+					
+						</p:column>	
+						
+						<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS == provedorSMS}">
+							<f:facet name="header">Ordem</f:facet>
+	
+							<h:outputText style="font-weight: bold" 
+							value="#{atributoOperacionalMB.provedoresSMSAsList.indexOf(provedorSMS) + 1}"/>						
+						</p:column>						
+<!-- COLUNA B -->							
+						<p:column style="text-align: center;" rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS != provedorSMS}">
+							<f:facet name="header">Provedor SMS</f:facet>
+						
+							<h:outputText style="color: #B5B5B5" 
+							value="#{provedorSMS.nome}"/>	
+						</p:column>
+						
+						<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS == provedorSMS}">
+							<f:facet name="header">Provedor SMS</f:facet>
+							
+							<h:outputText style="font-weight: bold" 
+							value="#{provedorSMS.nome}"/>						
+						</p:column>						
+<!-- COLUNA C -->	
+					
+					<p:column style="text-align: center;" rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS != provedorSMS}">
+						<f:facet name="header">Selecionado</f:facet>
+						
+					</p:column>
+						
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS == provedorSMS}" >
+						<f:facet name="header">Selecionado</f:facet>
+						
+						<h:outputText style="font-weight: bold" 	
+						value="X"/>
+						
+					</p:column>						
+																																							
+					<p:column style="text-align: center">
+						<p:commandButton icon="ui-icon-pin-s"
+						title="Selecionar Provedor SMS"
+						rendered="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS != provedorSMS}"
+						action="#{atributoOperacionalMB.selecionarProvedorSMS(provedorSMS)}"
+						update=":#{p:component('pn_tb_provedor_sms')}, :#{p:component('messages')}">
+						</p:commandButton>
+					</p:column>		
+						<f:facet name="footer">
+							Total: 
+							#{atributoOperacionalMB.provedoresSMSAsList.size()}
+						</f:facet>
+					</p:dataTable>								
+					
+					<br />
+					<h:panelGrid columns="1">				
+						<p:commandButton action="gerenciar-atributo-operacional" icon="ui-icon-gear"
+							value="Gerenciar Atributo Operacional"/>
+					</h:panelGrid>
+				</h:panelGrid>			
+			</p:panel>
+			<p:spacer height="100"/>						
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

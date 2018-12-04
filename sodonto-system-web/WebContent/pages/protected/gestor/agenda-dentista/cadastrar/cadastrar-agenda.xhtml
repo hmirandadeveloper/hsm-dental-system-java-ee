@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Agenda | Agenda Dentista | Nova Agenda" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="CADASTRAR AGENDA PARA DENTISTA">	
+			<p>Preencha corretamente as informações para Cadastrar uma Nova Agenda para o Dentista</p>
+			<br />
+			<h:panelGrid id="panel_dentista_agenda" columns="1" cellpadding="5" width="100%">
+				
+				<h:panelGrid columns="2">
+					<h:outputText value="Seleção de Dentista: " />
+					<p:commandButton icon="ui-icon-search" oncomplete="dialog_dentista_wv.show()"/>
+				</h:panelGrid>
+				
+				<p:fieldset legend="Dados do Dentista"
+				rendered="#{dentistaAgendaMB.dentistaSelecionadoDTO.idDentista != null}">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{dentistaAgendaMB.dentistaSelecionadoDTO.nomeCompleto}" />
+						<h:outputText value="CRO: " />
+						<h:outputText value="#{dentistaAgendaMB.dentistaSelecionadoDTO.croFormatado}" />
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Dados da Agenda"
+				rendered="#{dentistaAgendaMB.dentistaSelecionadoDTO.idDentista != null}">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputLabel for="agenda_dentista_estabelecimento" value="Estabelecimento: *" />							
+						<h:selectOneMenu id="agenda_dentista_estabelecimento"
+							value="#{dentistaAgendaMB.dentistaAgendaDTO.estabelecimentoDTO}"
+							converter="estabelecimentoConverter">								
+
+							<f:selectItem itemLabel="Escolha uma opção"
+								noSelectionOption="true" />
+
+							<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+								var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+								itemValue="#{estabelecimento}">
+							</f:selectItems>
+								
+							<p:ajax event="valueChange" update=":#{p:component('panel_dentista_agenda')}"></p:ajax>
+
+						</h:selectOneMenu>					
+					
+						<h:outputText value="Data: " />
+						<p:calendar locale="pt" value="#{dentistaAgendaMB.dentistaAgendaDTO.dataAgenda}" 
+						mindate="#{pagesMB.dataAtual}" pattern="dd/MM/yyyy"/>
+						<h:outputText value="Horário inicial: " />
+						<p:calendar locale="pt" value="#{dentistaAgendaMB.dentistaAgendaDTO.horarioI}" 
+						pattern="HH:mm" timeOnly="true" />
+						<h:outputText value="Horário Final: " />
+						<p:calendar locale="pt" value="#{dentistaAgendaMB.dentistaAgendaDTO.horarioF}" 
+						pattern="HH:mm" timeOnly="true"/>
+					</h:panelGrid>
+					<br />
+					<p:commandButton action="#{dentistaAgendaMB.salvar()}" icon="ui-icon-disk"
+						value="Salvar Agenda" update="messages, :#{p:component('panel_dentista_agenda')}" />
+				</p:fieldset>
+				
+						<p:dataTable id="tabela_agenda_dentista"
+						rendered="#{dentistaAgendaMB.dentistaSelecionadoDTO.idDentista != null}"
+						value="#{dentistaAgendaMB.buscarPorDentista()}" var="agenda"
+						paginator="#{dentistaAgendaMB.buscarPorDentista().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+
+							<f:facet name="header">
+								<h:outputText value="TABELA DE AGENDAS DO DENTISTA"/>
+								
+							</f:facet>
+							<p:column width="5%">
+								<f:facet name="header">Ordem</f:facet>
+								#{dentistaAgendaMB.buscarPorDentista().indexOf(agenda) + 1}
+							</p:column>
+							
+							<p:column width="15%">
+								<f:facet name="header">Data</f:facet>
+								<h:outputText value="#{agenda.dataAgenda}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>	
+							
+							<p:column width="50%" style="text-align: center">
+								<f:facet name="header">Intervalo Horário</f:facet>
+								#{agenda.intervaloTempo}
+							</p:column>	
+							
+							<p:column width="50%" style="text-align: center">
+								<f:facet name="header">Limite de Atendimentos</f:facet>
+								 #{dentistaAgendaMB.getTotalAtendimentos(agenda)}
+							</p:column>								
+							
+							<f:facet name="footer">
+							Total de Agendas: 
+							#{dentistaAgendaMB.buscarPorDentista().size()}
+							  
+							</f:facet>																												
+						</p:dataTable>								
+				
+				<h:panelGrid columns="1">			
+					
+					<p:commandButton action="manter-agenda" icon="ui-icon-pencil"
+						value="Manter Agendas" immediate="true"/>
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>
+			
+			<p:dialog id="dialog_dentista" resizable="false" modal="true" 
+			widgetVar="dialog_dentista_wv" 
+			header="BUSCA DE DENTISTA">
+			<h:panelGrid columns="1" id="dialog_dentista_titular_pn">			
+				<p:fieldset legend="Lista de dentistas">
+					<h:panelGrid id="dialog_dantista_ls_pn" columns="2">	
+						<p:dataTable id="tabela_dentista_titular"
+							value="#{dentistaMB.dentistas}" var="dentista"
+							paginator="#{dentistaMB.dentistas.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+							emptyMessage="Nenhum dado encontrado...">
+		
+							<f:facet name="header">
+						TABELA DE DENTISTA
+						</f:facet>
+								<p:column>
+									<f:facet name="header">Código</f:facet>
+							#{dentista.idDentista}
+						</p:column>
+								<p:column>
+									<f:facet name="header">Nome</f:facet>
+							#{dentista.nomeCompleto}
+						</p:column>
+								<p:column>
+									<f:facet name="header">CPF</f:facet>
+							#{dentista.cpf}
+						</p:column>			
+						
+								<p:column>
+									<f:facet name="header">CRO</f:facet>
+							#{dentista.croFormatado}
+						</p:column>							
+						
+								<p:column>
+									<f:facet name="header">Estabelecimento</f:facet>
+							#{dentista.estabelecimentoDTO.nomeEstabelecimentoFormatado}
+						</p:column>
+												
+								<p:column>
+									<p:commandButton value="Selecionar "
+									icon="ui-icon-flag"
+										immediate="true"
+										oncomplete="dialog_dentista_wv.hide()"
+										action="#{dentistaAgendaMB.selecionarDentista(dentista)}"
+										update=":#{p:component('messages')}, 
+										:#{p:component('panel_dentista_agenda')}">
+									</p:commandButton>
+								</p:column>				
+							<f:facet name="footer">
+							Total: 
+							#{dentistaMB.dentistas.size()}
+							</f:facet>
+						</p:dataTable>	
+											
+					</h:panelGrid>								
+				</p:fieldset>
+				
+				<h:panelGrid columns="2">					
+				<p:commandButton value="Voltar" 
+				onclick="dialog_dentista_wv.hide()"/>				
+				</h:panelGrid>
+				 
+			</h:panelGrid>
+			</p:dialog>					
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

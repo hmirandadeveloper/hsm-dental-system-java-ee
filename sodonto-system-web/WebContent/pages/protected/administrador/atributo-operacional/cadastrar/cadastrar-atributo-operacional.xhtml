@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Configurações | Sistema | Atributo Operacional | Novo Atributo Operacional" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="CADASTRAR ATRIBUTO OPERACIONAL">	
+			<p>Preencha corretamente as informações para Cadastrar um Novo Atributo Operacional</p>
+			<br />
+			<h:panelGrid id="panel_atributo_operacional" columns="1" cellpadding="5">
+				
+				<h:panelGrid columns="1">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="id_atributo_operacional_titulo" value="Título: *" />
+						<p:inputText id="id_atributo_operacional_titulo"
+							maxlength="50"
+							size="50"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.titulo}" />
+					
+						<p:outputLabel for="id_atributo_operacional_provedor_sms" value="Provedor SMS: " />
+						<h:selectOneMenu id="id_atributo_operacional_provedor_sms"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.provedorSMS}">
+		
+							<f:selectItem itemLabel="Selecione um Provedor SMS"
+								noSelectionOption="true" />
+		
+							<f:selectItems value="#{atributoOperacionalMB.provedoresSMS}" var="provedor"
+								itemLabel="#{provedor.nome}" itemValue="#{provedor}">
+							</f:selectItems>
+		
+							<p:ajax event="valueChange" update="@this"></p:ajax>
+		
+						</h:selectOneMenu>					
+					</h:panelGrid>
+					
+					<h:panelGrid columns="3">	
+						<p:outputLabel for="id_atributo_operacional_duracao_atendimento" value="Duração dos Atendimentos: *" />
+						<p:spinner id="id_atributo_operacional_duracao_atendimento"
+							min="1"
+							stepFactor="1"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.duracaoAtendimento}" />
+						<h:outputText value="Minutos"/>
+							
+						<p:outputLabel for="id_atributo_operacional_validacao_telefone" value="Tempo para validação de Telefone: *" />
+						<p:spinner id="id_atributo_operacional_validacao_telefone"
+							min="1"
+							stepFactor="1"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.tempoValidacaoTelefone}" />	
+						<h:outputText value="Dias"/>
+							
+						<p:outputLabel for="id_atributo_operacional_total_linha_tabela" value="Total de Linhas em Tabelas: *" />
+						<p:spinner id="id_atributo_operacional_total_linha_tabela"
+							min="5"
+							stepFactor="1"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.numeroLinhaTabela}" />
+						<h:outputText value="Linhas"/>
+							
+						<p:outputLabel for="id_atributo_operacional_limit_consulta_bd" value="Limite de Consulta no BD: *" />
+						<p:spinner id="id_atributo_operacional_limit_consulta_bd"
+							min="20"
+							stepFactor="25"
+							value="#{atributoOperacionalMB.atributoOperacionalDTO.limitQuery}" />
+						<h:outputText value="Dados"/>
+					</h:panelGrid>																																		
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2">			
+					<p:commandButton action="#{atributoOperacionalMB.salvar()}" icon="ui-icon-disk"
+						value="Salvar Atributo Operacional" update="messages, :#{p:component('panel_atributo_operacional')}" />
+						
+					<p:commandButton action="manter-atributo-operacional" icon="ui-icon-pencil"
+						value="Manter Atributos Operacionais" immediate="true"/>
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

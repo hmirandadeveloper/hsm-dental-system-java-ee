@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ 
+ <!-- CONVERSORES -->
+ 
+ <converter>
+  <converter-id>caixaConverter</converter-id>
+  <converter-class>gui.conversor.CaixaConverter</converter-class>
+ </converter>
+ 
+ <converter>
+  <converter-id>cargoConverter</converter-id>
+  <converter-class>gui.conversor.CargoConverter</converter-class>
+ </converter>
+
+ <converter>
+  <converter-id>dentistaConverter</converter-id>
+  <converter-class>gui.conversor.DentistaConverter</converter-class>
+ </converter>
+
+ <converter>
+  <converter-id>especialidadeConverter</converter-id>
+  <converter-class>gui.conversor.EspecialidadeConverter</converter-class>
+ </converter>
+
+ <converter>
+  <converter-id>estabelecimentoConverter</converter-id>
+  <converter-class>gui.conversor.EstabelecimentoConverter</converter-class>
+ </converter>
+
+ <converter>
+  <converter-id>operadoraConverter</converter-id>
+  <converter-class>gui.conversor.OperadoraConverter</converter-class>
+ </converter>
+ 
+ <!-- NAVEGAÇÃO DE PÁGINAS -->
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>index-protected</from-outcome>
+   <to-view-id>/pages/protected/index.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>nova-agenda</from-outcome>
+   <to-view-id>/pages/protected/gestor/agenda-dentista/cadastrar/cadastrar-agenda.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-agenda</from-outcome>
+   <to-view-id>/pages/protected/gestor/agenda-dentista/manter/manter-agenda.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-agendamento</from-outcome>
+   <to-view-id>/pages/protected/atendente-consultorio/agendamento/gestao/gerenciar-agendamento.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-agendamento</from-outcome>
+   <to-view-id>/pages/protected/atendente-consultorio/agendamento/visualizar/visualizar-agendamento.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-atendimento</from-outcome>
+   <to-view-id>/pages/protected/atendente-consultorio/atendimento/visualizar/visualizar-atendimento.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-atributo-operacional</from-outcome>
+   <to-view-id>/pages/protected/administrador/atributo-operacional/cadastrar/cadastrar-atributo-operacional.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-atributo-operacional</from-outcome>
+   <to-view-id>/pages/protected/administrador/atributo-operacional/manter/manter-atributo-operacional.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-atributo-operacional</from-outcome>
+   <to-view-id>/pages/protected/administrador/atributo-operacional/gerenciar/gerenciar-atributo-operacional.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-provedor-sms</from-outcome>
+   <to-view-id>/pages/protected/administrador/provedor-sms/gerenciar/gerenciar-provedor-sms.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>abrir-caixa</from-outcome>
+   <to-view-id>/pages/protected/operador/caixa/abertura/abrir-caixa.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-caixa</from-outcome>
+   <to-view-id>/pages/protected/operador/caixa/gestao/gerenciar-caixa.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-caixa</from-outcome>
+   <to-view-id>/pages/protected/gestor/caixa/manter/manter-caixa.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-caixa</from-outcome>
+   <to-view-id>/pages/protected/operador/caixa/visualizar/visualizar-caixa.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-dentista</from-outcome>
+   <to-view-id>/pages/protected/gestor/dentista/cadastrar/cadastrar-dentista.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-dentista</from-outcome>
+   <to-view-id>/pages/protected/gestor/dentista/manter/manter-dentista.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>vincular-especialidade</from-outcome>
+   <to-view-id>/pages/protected/gestor/dentista/vincular-especializacao/vincular-especializacao.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-estabelecimento</from-outcome>
+   <to-view-id>/pages/protected/gestor/estabelecimento/cadastrar/cadastrar-estabelecimento.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-estabelecimento</from-outcome>
+   <to-view-id>/pages/protected/gestor/estabelecimento/manter/manter-estabelecimento.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-funcionario</from-outcome>
+   <to-view-id>/pages/protected/gestor/funcionario/cadastrar/cadastrar-funcionario.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-funcionario</from-outcome>
+   <to-view-id>/pages/protected/gestor/funcionario/manter/manter-funcionario.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-log-operacional</from-outcome>
+   <to-view-id>/pages/protected/administrador/log-operacional/visualizar/visualizar-log-operacional.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-paciente</from-outcome>
+   <to-view-id>/pages/protected/atendente/paciente/cadastrar/cadastrar-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-paciente</from-outcome>
+   <to-view-id>/pages/protected/operador/paciente/manter/manter-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>vincular-plano</from-outcome>
+   <to-view-id>/pages/protected/operador/paciente/plano/vincular-plano.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-paciente</from-outcome>
+   <to-view-id>/pages/protected/atendente/paciente/visualizar/visualizar-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-agendamento-paciente</from-outcome>
+   <to-view-id>/pages/protected/atendente/paciente/visualizar/visualizar-agendamento-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>visualizar-atendimento-paciente</from-outcome>
+   <to-view-id>/pages/protected/atendente/paciente/visualizar/visualizar-atendimento-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule>
+  <navigation-case>
+   <from-outcome>enviar-torpedo-paciente</from-outcome>
+   <to-view-id>/pages/protected/atendente/paciente/torpedo/enviar-torpedo-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-provedor-sms</from-outcome>
+   <to-view-id>/pages/protected/administrador/provedor-sms/gerenciar/gerenciar-provedor-sms.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-agendamento-cancelado</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-agendamento-cancelado/rl-agendamento-cancelado.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-atendimento-finalizado</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-atendimento-finalizado/rl-atendimento-finalizado.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-atendimento-dentista</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-atendimento-dentista/rl-atendimento-dentista.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-marcacao-volta</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-marcacao-volta/rl-marcacao-volta.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-paciente-agendado</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-paciente-agendado/rl-paciente-agendado.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-paciente-faltoso</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-paciente-faltoso/rl-paciente-faltoso.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>  
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-paciente-nao-reagendado</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-paciente-nao-reagendado/rl-paciente-nao-reagendado.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>rl-plano-paciente</from-outcome>
+   <to-view-id>/pages/protected/gestor/relatorio/rl-plano-paciente/rl-plano-paciente.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-cargo</from-outcome>
+   <to-view-id>/pages/protected/gestor/cargo/cadastrar/cadastrar-cargo.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-cargo</from-outcome>
+   <to-view-id>/pages/protected/gestor/cargo/manter/manter-cargo.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-especialidade</from-outcome>
+   <to-view-id>/pages/protected/gestor/especializacao-dentista/cadastrar/cadastrar-especializacao-dentista.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-especialidade</from-outcome>
+   <to-view-id>/pages/protected/gestor/especializacao-dentista/manter/manter-especializacao-dentista.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-msg-email</from-outcome>
+   <to-view-id>/pages/protected/gestor/mensagem/email/cadastrar/cadastrar-msg-email.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-msg-email</from-outcome>
+   <to-view-id>/pages/protected/gestor/mensagem/email/manter/manter-msg-email.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-msg-torpedo</from-outcome>
+   <to-view-id>/pages/protected/gestor/mensagem/torpedo/cadastrar/cadastrar-msg-torpedo.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-msg-torpedo</from-outcome>
+   <to-view-id>/pages/protected/gestor/mensagem/torpedo/manter/manter-msg-torpedo.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>cadastrar-operadora</from-outcome>
+   <to-view-id>/pages/protected/gestor/operadora-celular/cadastrar/cadastrar-operadora.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manter-operadora</from-outcome>
+   <to-view-id>/pages/protected/gestor/operadora-celular/manter/manter-operadora.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>gerenciar-plano</from-outcome>
+   <to-view-id>/pages/protected/gestor/plano/gestao/gerenciar-plano.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>alterar-dados</from-outcome>
+   <to-view-id>/pages/protected/usuario/manter/alterar-dados.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>alterar-senha</from-outcome>
+   <to-view-id>/pages/protected/usuario/manter/alterar-senha.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>ativar-usuario</from-outcome>
+   <to-view-id>/pages/protected/temporario/ativacao/ativar-usuario.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+</faces-config>

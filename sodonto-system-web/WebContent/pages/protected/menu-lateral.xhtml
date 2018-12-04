@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+	<h:form>
+		<p:panelMenu 
+		rendered="#{pagesMB.funcionarioLogado.idFuncionario != null and pagesMB.keyValidation.active ? 'true' : 'false'}"
+		style="width:200px;">
+			<p:submenu label="Menu Principal">
+				
+				<p:submenu label="Agenda" icon="ui-icon-note" style="font-size: 12px;"
+				rendered="#{pagesMB.permissaoUsuarioAtivo}">
+					<p:submenu label="Agenda Dentista" icon="ui-icon-calculator" rendered="#{pagesMB.permissaoGestor}">
+						<p:menuitem value="Nova Agenda" icon="ui-icon-plusthick" style="color: #888888"
+						action="nova-agenda"/>
+						<p:menuitem value="Manter Agenda" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-agenda"/>
+					</p:submenu>
+					<p:submenu label="Agendamento" icon="ui-icon-clock">
+						<p:menuitem value="Gerenciar Agendamento" icon="ui-icon-pencil" style="color: #888888"
+						action="gerenciar-agendamento"/>
+						<p:menuitem value="Visualizar Agendamento" icon="ui-icon-search" style="color: #888888"
+						action="visualizar-agendamento"/>						
+					</p:submenu>
+					<p:submenu label="Atendimento" icon="ui-icon-calendar">
+						<p:menuitem value="Visualizar Atendimento" icon="ui-icon-search" style="color: #888888"
+						action="visualizar-atendimento"/>
+					</p:submenu>
+				</p:submenu>
+				
+				<p:submenu label="Caixa" icon="ui-icon-print" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoOperador}">
+					<p:menuitem value="Abrir Caixa" icon="ui-icon-radio-on" style="color: #888888"
+					action="abrir-caixa"/>
+					<p:menuitem value="Fechar Caixa" icon="ui-icon-bullet" style="color: #888888"
+					action="gerenciar-caixa"/>
+					<p:menuitem value="Gerenciar Caixa" icon="ui-icon-bookmark" style="color: #888888"
+					action="gerenciar-caixa"/>
+					<p:menuitem value="Visualizar Caixa" icon="ui-icon-search" style="color: #888888"
+					action="visualizar-caixa"/>
+					<p:menuitem value="Manter Caixa" icon="ui-icon-pencil" style="color: #888888"
+					action="manter-caixa"
+					rendered="#{pagesMB.permissaoGestor}"/>										
+				</p:submenu>
+				
+				<p:submenu label="Recursos Humanos" icon="ui-icon-person" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoGestor}">
+					<p:submenu label="Dentista" icon="ui-icon-suitcase">
+						<p:menuitem value="Novo Dentista" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-dentista"/>
+						<p:menuitem value="Manter Dentista" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-dentista"/>
+						<p:menuitem value="Vincular Especialidade" icon="ui-icon-pin-w" style="color: #888888"
+						action="vincular-especialidade"/>
+					</p:submenu>
+					<p:submenu label="Funcionário" icon="ui-icon-contact">
+						<p:menuitem value="Novo Funcionário" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-funcionario"/>
+						<p:menuitem value="Manter Funcionário" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-funcionario"/>				
+					</p:submenu>
+				</p:submenu>						
+				
+				<p:submenu label="Paciente" icon="ui-icon-contact" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoAtendente}">
+					<p:menuitem value="Novo Paciente" icon="ui-icon-plusthick" style="color: #888888"
+					rendered="#{pagesMB.permissaoAtendente}"
+					action="cadastrar-paciente"/>
+					<p:menuitem value="Manter Paciente" icon="ui-icon-refresh" style="color: #888888"
+					rendered="#{pagesMB.permissaoOperador}"
+					action="manter-paciente"/>
+					<p:menuitem value="Enviar Torpedo" icon="ui-icon-signal-diag" style="color: #888888"
+					rendered="#{pagesMB.permissaoAtendente}"
+					action="enviar-torpedo-paciente"/>					
+					<p:menuitem value="Vincular Plano" icon="ui-icon-clipboard" style="color: #888888"
+					action="vincular-plano" rendered="#{pagesMB.permissaoOperador}"/>					
+					<p:submenu label="Visualizar" icon="ui-icon-search">
+						<p:menuitem value="Pacientes" icon="ui-icon-person" style="color: #888888"
+						action="visualizar-paciente"/>
+						<p:menuitem value="Agendamentos" icon="ui-icon-clock" style="color: #888888"
+						action="visualizar-agendamento-paciente"/>	
+						<p:menuitem value="Atendimentos" icon="ui-icon-calendar" style="color: #888888"
+						action="visualizar-atendimento-paciente"/>
+					</p:submenu>				
+				</p:submenu>	
+				
+				<p:submenu label="Relatórios" icon="ui-icon-script" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoGestor}">
+					<p:menuitem value="Agendamento cancelado" icon="ui-icon-document" style="color: #888888" title="Relatório Agendamentos Cancelados por Período (Versão: 1.0.00)"
+					action="rl-agendamento-cancelado"/>
+					<p:menuitem value="Atendimento Dentista" icon="ui-icon-document" style="color: #888888" title="Relatório Atendimentos Realizados por Dentista em Período (Versão: 1.0.00)"
+					action="rl-atendimento-dentista"/>
+					<p:menuitem value="Atendimento finalizado" icon="ui-icon-document" style="color: #888888" title="Relatório Atendimentos Finalizados por Período (Versão: 1.0.00)"
+					action="rl-atendimento-finalizado"/>
+					<p:menuitem value="Marcação de volta" icon="ui-icon-document" style="color: #888888" title="Relatório de Marcação de Volta por Dia (Versão: 2.0.00)"
+					action="rl-marcacao-volta"/>						
+					<p:menuitem value="Pacientes agendados" icon="ui-icon-document" style="color: #888888" title="Relatório de Pacientes Agendados por Dia (Versão: 2.0.00)"
+					action="rl-paciente-agendado"/>						
+					<p:menuitem value="Pacientes faltosos" icon="ui-icon-document" style="color: #888888" title="Relatório de Pacientes Faltosos por Dia (Versão: 2.0.00)"
+					action="rl-paciente-faltoso"/>	
+					<p:menuitem value="Pacientes não reagendados" icon="ui-icon-document" style="color: #888888" title="Relatório de Pacientes NÃO REAGENDADOS por Dia (Versão: 2.1.00)"
+					action="rl-paciente-nao-reagendado"/>									
+					<p:menuitem value="Plano vendido" icon="ui-icon-document" style="color: #888888" title="Relatório Planos Fechados com Pacientes por Período"
+					action="rl-plano-paciente" rendered="false"/>										
+				</p:submenu>
+				
+				<p:submenu label="Tabela" icon="ui-icon-calculator" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoGestor}">
+					<p:submenu label="Cargo" icon="ui-icon-flag">
+						<p:menuitem value="Novo Cargo" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-cargo"/>
+						<p:menuitem value="Manter Cargo" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-cargo"/>
+					</p:submenu>
+					<p:submenu label="Especialidade" icon="ui-icon-star">
+						<p:menuitem value="Nova Especialidade" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-especialidade"/>
+						<p:menuitem value="Manter Especialidade" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-especialidade"/>				
+					</p:submenu>
+					<p:submenu label="Mensagem Email" icon="ui-icon-mail-closed">
+						<p:menuitem value="Nova Mensagem" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-msg-email"/>
+						<p:menuitem value="Manter Mensagem" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-msg-email"/>				
+					</p:submenu>
+					<p:submenu label="Mensagem Torpedo" icon="ui-icon-comment">
+						<p:menuitem value="Novo Torpedo" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-msg-torpedo"/>
+						<p:menuitem value="Manter Torpedo" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-msg-torpedo"/>				
+					</p:submenu>										
+					<p:submenu label="Operadora" icon="ui-icon-signal-diag">
+						<p:menuitem value="Nova Operadora" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-operadora"/>
+						<p:menuitem value="Manter Operadora" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-operadora"/>				
+					</p:submenu>
+					<p:submenu label="Plano Odontológico" icon="ui-icon-clipboard">
+						<p:menuitem value="Gerenciar Plano" icon="ui-icon-pencil" style="color: #888888"
+						action="gerenciar-plano"/>			
+					</p:submenu>
+					<p:submenu label="Estabelecimento" icon="ui-icon-suitcase">
+						<p:menuitem value="Novo Estabelecimento" icon="ui-icon-plusthick" style="color: #888888"
+						action="cadastrar-estabelecimento"/>
+						<p:menuitem value="Manter Estabelecimento" icon="ui-icon-refresh" style="color: #888888"
+						action="manter-estabelecimento"/>				
+					</p:submenu>										
+				</p:submenu>				
+				
+				<p:submenu label="Ativação" icon="ui-icon-key" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoTemporario}">
+					<p:menuitem value="Ativar Usuário" icon="ui-icon-unlocked" style="color: #888888"
+					action="ativar-usuario"/>
+				</p:submenu>				
+				
+				<p:submenu label="Configurações" icon="ui-icon-wrench" style="font-size: 12px"
+				rendered="#{pagesMB.permissaoUsuarioAtivo}">
+					<p:menuitem value="Alterar Dados" icon="ui-icon-pencil" style="color: #888888"
+					action="alterar-dados"/>
+					<p:menuitem value="Alterar Senha" icon="ui-icon-locked" style="color: #888888"
+					action="alterar-senha"/>
+					
+					<p:submenu label="Sistema" icon="ui-icon-star" rendered="#{pagesMB.permissaoAdministrador}">
+						<p:submenu label="Atributos Operacionais" icon="ui-icon-gear">
+							<p:menuitem value="Cadastrar" icon="ui-icon-plusthick" style="color: #888888"
+							action="cadastrar-atributo-operacional"/>
+							<p:menuitem value="Gerenciar" icon="ui-icon-wrench" style="color: #888888"
+							action="gerenciar-atributo-operacional"/>						
+						</p:submenu>
+						
+						<p:submenu label="Provedor SMS" icon="ui-icon-signal-diag">
+							<p:menuitem value="Gerenciar" icon="ui-icon-locked" style="color: #888888"
+							action="gerenciar-provedor-sms"/>						
+						</p:submenu>
+						
+						<p:submenu label="Log Operacional" icon="ui-icon-script">
+							<p:menuitem value="Visualizar" icon="ui-icon-search" style="color: #888888"
+							action="visualizar-log-operacional"/>						
+						</p:submenu>																							
+					</p:submenu>
+				</p:submenu>								
+			
+				<p:submenu label="Controle" icon="ui-icon-gear" style="font-size: 12px">
+					<p:menuitem value="Sair" icon="ui-icon-power" style="color: #888888"
+					action="#{pagesMB.iniciarModuloGerencial()}"/>
+				</p:submenu>
+			</p:submenu>
+		</p:panelMenu> 
+	</h:form>
+</body>
+</html>

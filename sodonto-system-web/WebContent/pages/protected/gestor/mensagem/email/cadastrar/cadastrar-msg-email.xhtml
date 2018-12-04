@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Tabela | Mensagem | Email | Nova Mensagem de Email" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="CADASTRAR MENSAGEM DE EMAIL">	
+			<p>Preencha corretamente as informações para Cadastrar uma Nova Mensagem de Email</p>
+			<br />
+			<h:panelGrid id="panel_msgPreEmail" columns="1" cellpadding="5">
+				
+				<h:panelGrid columns="2">
+					<p:outputLabel for="msgPreEmail_descricao" value="Descrição: *" />
+					<p:inputText id="msgPreEmail_descricao"
+						maxlength="50"
+						size="50"
+						value="#{msgPreEmailMB.msgPreEmailDTO.descicao}" />
+						
+					<p:outputLabel for="msgPreEmail_titulo" value="Título: *" />
+					<p:inputText id="msgPreEmail_titulo"
+						maxlength="25"
+						size="25"
+						value="#{msgPreEmailMB.msgPreEmailDTO.titulo}" />
+						
+					<p:outputLabel for="msgPreEmail_msg" value="Mensagem: *" />
+					<h:panelGrid columns="1">
+						<p:inputTextarea id="msgPreEmail_msg"
+							maxlength="500"
+							cols="80"
+							rows="8"
+							autoResize="false"
+							counter="display_msg_email"
+							counterTemplate="{0} caracteres restantes."
+							value="#{msgPreEmailMB.msgPreEmailDTO.msg}" />	
+							<h:outputText id="display_msg_email" />	
+						</h:panelGrid>										
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2">			
+					<p:commandButton action="#{msgPreEmailMB.salvar()}" icon="ui-icon-disk"
+						value="Salvar Mensagem" update="messages, :#{p:component('panel_msgPreEmail')}" />
+						
+					<p:commandButton action="manter-msg-email" icon="ui-icon-pencil"
+						value="Manter Mensagens" immediate="true"/>
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

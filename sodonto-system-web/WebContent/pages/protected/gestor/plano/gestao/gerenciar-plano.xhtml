@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Tabela | Plano | Gerenciar Plano" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="GERENCIAR PLANO" >	
+			<p>Preencha corretamente as informações para Cadastrar ou Gerenciar um Plano</p>
+			<br />
+			<h:panelGrid id="panel_plano" columns="1" cellpadding="5" width="100%">
+				
+				<p:fieldset legend="Novo Plano" toggleable="true">	
+					<h:panelGrid columns="2">
+							<h:outputLabel for="plano_estabelecimento" value="Estabelecimento: *" />							
+							<h:selectOneMenu id="plano_estabelecimento"
+								value="#{planoMB.planoDTO.estabelecimentoDTO}"
+								converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('panel_plano')}"></p:ajax>
+
+							</h:selectOneMenu>					
+					
+						<p:outputLabel for="plano_nome" value="Nome: *" />
+						<p:inputText id="plano_nome"
+							maxlength="50"
+							size="50"
+							value="#{planoMB.planoDTO.nomePlano}" />
+							
+						<p:outputLabel for="plano_descricao" value="Descrição: *"/>
+						<h:panelGrid columns="1">
+						<p:inputTextarea id="plano_descricao"
+							maxlength="450"
+							cols="80"
+							rows="8"
+							autoResize="false"
+							counter="plano_descricao_display"
+							counterTemplate="{0} caracteres restantes."
+							value="#{planoMB.planoDTO.descricaoPlano}" />	
+							<h:outputText id="plano_descricao_display" />	
+						</h:panelGrid>							
+						
+						<h:outputText value="Total de Meses: *" />
+						<p:spinner value="#{planoMB.planoDTO.totalMeses}" min="0">
+							<p:ajax update=":#{p:component('bt_incluir_plano')}"/>
+						</p:spinner>
+						
+						<h:outputText value="Validade: *" />
+						<p:calendar locale="pt" value="#{planoMB.planoDTO.validade}" pattern="dd/MM/yyyy">
+						</p:calendar>						
+						
+					<p:commandButton id="bt_incluir_plano" action="#{planoMB.salvar()}" icon="ui-icon-plusthick"
+						value="Incluir Plano" update="messages, :#{p:component('panel_plano')}" 
+						disabled ="#{planoMB.planoDTO.totalMeses == 0}"/>					
+						
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Gerenciar Planos" >
+					<h:panelGrid columns="1" width="100%">
+						<p:dataTable id="tabela_plano"
+						value="#{planoMB.buscarPlanos()}" var="plano"
+						paginator="#{planoMB.buscarPlanos().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+							<f:facet name="header">
+								TABELA DE PLANOS
+							</f:facet>
+								
+							<p:column style="text-align: center">
+								<f:facet name="header">Ordem</f:facet>
+									#{planoMB.buscarPlanos().indexOf(plano) + 1}
+							</p:column>	
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Nome</f:facet>
+									#{plano.nomePlano}
+							</p:column>	
+							
+							<p:column width="50%" style="text-align: center">
+								<f:facet name="header">Descrição</f:facet>
+									#{plano.descricaoPlano}
+							</p:column>		
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Meses</f:facet>
+
+									#{plano.totalMeses}
+							</p:column>
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Valor Total (R$)</f:facet>
+									#{plano.valorTotal}
+							</p:column>	
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Validade</f:facet>
+								<h:outputText value="#{plano.validade}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>		
+							</p:column>
+							
+							<p:column style="text-align: center" width="12%">
+								<p:commandButton icon="ui-icon-pencil"
+								title="Editar Plano"
+								action="#{planoMB.selecionarPlano(plano, true)}"
+								update=":#{p:component('dialog_alterar_plano')},
+								:#{p:component('messages')}"
+								oncomplete="dialog_alterar_plano_wv.show()"
+								widgetVar="bt_alterar_plano_wv_#{plano.idPlano}"
+								onclick="bt_alterar_plano_wv_#{plano.idPlano}.disable()">
+								</p:commandButton>
+								
+								<p:spacer width="5"/>
+								
+								<p:commandButton icon="ui-icon-gear"
+								title="Gerenciar Mensalidades do Plano"
+								action="#{planoMB.selecionarPlano(plano, false)}"
+								update=":#{p:component('dialog_plano_mensalidade')},
+								:#{p:component('messages')}"
+								oncomplete="dialog_plano_mensalidade_wv.show()"
+								widgetVar="bt_gerenciar_mensalidade_wv_#{plano.idPlano}"
+								onclick="bt_gerenciar_mensalidade_wv_#{plano.idPlano}.disable()">
+								</p:commandButton>								
+								
+								<p:spacer width="5"/>
+								
+								<p:commandButton icon="ui-icon-closethick"
+								title="Remover Plano"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								action="#{planoMB.removerPlano(plano)}"
+								update=":#{p:component('panel_plano')},
+								:#{p:component('messages')}"
+								widgetVar="bt_excluir_plano_wv_#{plano.idPlano}"
+								onclick="bt_excluir_plano_wv_#{plano.idPlano}.disable()">
+									<p:confirm header="Remoção de Plano" icon="ui-icon-alert" message="Deseja realmente remover o Plano?"/>
+								</p:commandButton>								
+							</p:column>							
+							
+							<f:facet name="footer">
+							Total de Planos: 
+							#{planoMB.buscarPlanos().size()}
+							  
+							</f:facet>																																																			
+							</p:dataTable>
+					</h:panelGrid>
+				</p:fieldset>
+				
+			</h:panelGrid>
+			</p:panel>	
+			<p:spacer height="200"/>
+			
+			
+			<p:dialog id="dialog_plano_mensalidade" resizable="false" modal="true"
+				widgetVar="dialog_plano_mensalidade_wv" header="MENSALIDADES DO PLANO"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="950" closable="false">
+
+				<h:panelGrid id="pn_mensalidade_plano" columns="1" cellpadding="5" width="100%">
+					<p:fieldset legend="Dados do Plano">
+						<h:panelGrid id="pn_dialog_dados_plano" columns="1">
+							<h:outputText value="Estabelecimento: #{planoMB.planoDTOSelecionado.estabelecimentoDTO.nomeEstabelecimentoFormatado}" />
+							<h:outputText value="Código: #{planoMB.planoDTOSelecionado.idPlano}" />
+							<h:outputText value="Nome: #{planoMB.planoDTOSelecionado.nomePlano}" />
+							<h:outputText value="Total de Meses: #{planoMB.planoDTOSelecionado.totalMeses}" />
+							<h:outputText value="Valor Total: R$ #{planoMB.planoDTOSelecionado.valorTotal}" />														
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Mensalidades do Plano">
+
+						<h:panelGrid columns="1" cellpadding="2" id="tb_mensalidade_plano" width="100%">
+							<p:dataTable id="tabela_mensalidade_plano"
+							value="#{planoMB.carregarMensalidadesPlano()}" var="mensalidade"
+							paginator="#{planoMB.carregarMensalidadesPlano().size() > 6 ? 'true' : 'false'}" rows="6"
+							emptyMessage="Nenhum dado encontrado...">
+								
+								<f:facet name="header">
+									TABELA DE MENSALIDADES DO PLANO
+								</f:facet>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Mes</f:facet>
+									#{mensalidade.mes}
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Mes</f:facet>	
+									<p:spinner value="#{mensalidade.valorMes}" min="0" stepFactor=".5" size="5">
+									</p:spinner>
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Reajustado</f:facet>	
+									<p:spinner value="#{mensalidade.valorReajustado}" min="0" stepFactor=".5" size="5"/>
+								</p:column>								
+								
+								<p:column width="40%" style="text-align: center">
+									<f:facet name="header">Observação</f:facet>
+									<p:inputText value="#{mensalidade.obs}" size="100" maxlength="100"/>
+								</p:column>	
+								
+								<p:column>	
+									<p:commandButton icon="ui-icon-closethick"
+									title="Remover Mensalidade do Plano"
+									rendered="#{pagesMB.permissaoAdministrador and mensalidade.mes == planoMB.carregarMensalidadesPlano().size() and planoMB.carregarMensalidadesPlano().size() > 1}"
+									action="#{planoMB.removerMensalidade(mensalidade)}"
+									update=":#{p:component('pn_mensalidade_plano')},
+									:#{p:component('messages')}"
+									widgetVar="bt_excluir_mensalidade_plano_wv"
+									onclick="bt_excluir_mensalidade_plano_wv.disable()">
+										<p:confirm header="Remoção de Mensalidade do Plano" icon="ui-icon-alert" message="Deseja realmente remover a Mensalidade do Plano?"/>
+									</p:commandButton>
+								</p:column>															
+								
+								<f:facet name="footer">
+									Total de Mensalidades: 
+									#{planoMB.carregarMensalidadesPlano().size()}
+								</f:facet>																																			
+							</p:dataTable>
+							
+							<p:commandButton actionListener ="#{planoMB.atualizarMensalidades()}" 
+							value="Salvar Mensalidades" 
+							icon="ui-icon-disk" 
+							update=":#{p:component('messages')}, :#{p:component('pn_mensalidade_plano')}"
+							widgetVar="bt_salvar_mensalidade_wv"
+							onclick="bt_salvar_mensalidade_wv.disable()">
+							</p:commandButton>																										
+						</h:panelGrid>										
+					</p:fieldset>
+					
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_plano_mensalidade_wv.hide()"
+					update=":#{p:component('tabela_plano')}"/>					
+				</h:panelGrid>
+			</p:dialog>				
+			
+			<p:dialog id="dialog_alterar_plano" resizable="false" modal="true"
+				widgetVar="dialog_alterar_plano_wv" header="ALTERAR PLANO"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="950" closable="false">
+				<h:panelGrid id="pn_dados_plano_alteracao" columns="1" cellpadding="5" width="100%">
+					
+					<h:panelGrid columns="2">
+						<h:outputLabel for="plano_estabelecimento_alteracao" value="Estabelecimento: *" />
+													
+						<h:selectOneMenu id="plano_estabelecimento_alteracao"
+						value="#{planoMB.planoDTOAlteracao.estabelecimentoDTO}"
+						converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('panel_plano')}"></p:ajax>
+
+							</h:selectOneMenu>					
+					
+						<p:outputLabel for="plano_nome_alteracao" value="Nome: " />
+						<p:inputText id="plano_nome_alteracao"
+							maxlength="50"
+							size="50"
+							value="#{planoMB.planoDTOAlteracao.nomePlano}" />
+							
+						<p:outputLabel for="plano_descricao_alteracao" value="Descrição: "/>
+						<h:panelGrid columns="1">
+						<p:inputTextarea id="plano_descricao_alteracao"
+							maxlength="450"
+							cols="80"
+							rows="8"
+							autoResize="false"
+							counter="plano_descricao_alteracao_display"
+							counterTemplate="{0} caracteres restantes."
+							value="#{planoMB.planoDTOAlteracao.descricaoPlano}" />	
+							<h:outputText id="plano_descricao_alteracao_display" />	
+						</h:panelGrid>							
+						
+						<h:outputText value="Total de Meses: *" />
+						<p:spinner value="#{planoMB.planoDTOAlteracao.totalMeses}" min="#{planoMB.planoMensalidades.size()}">
+						</p:spinner>
+						
+						<h:outputText value="Validade: *" />
+						<p:calendar locale="pt" value="#{planoMB.planoDTOAlteracao.validade}" pattern="dd/MM/yyyy" mindate="#{pagesMB.dataAtual}">
+						</p:calendar>						
+						
+						<p:commandButton id="bt_alterar_plano" action="#{planoMB.alterar(true)}" icon="ui-icon-pencil"
+						value="Alterar Plano" update="messages, :#{p:component('panel_plano')}" 
+						oncomplete="dialog_alterar_plano_wv.hide()"/>
+						
+						<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+						value="Voltar" immediate="true" onclick="dialog_alterar_plano_wv.hide()"
+						update=":#{p:component('tabela_plano')}" action="#{planoMB.limparSelecaoPlano()}"/>												
+						
+					</h:panelGrid>					
+					
+				</h:panelGrid>
+				
+			</p:dialog>
+			
+			
+			<p:confirmDialog global="true" showEffect="drop" hideEffect="drop">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>	
+			</p:confirmDialog>				
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

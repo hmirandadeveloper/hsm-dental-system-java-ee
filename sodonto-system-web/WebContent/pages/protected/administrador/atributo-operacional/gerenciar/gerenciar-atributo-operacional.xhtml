@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Configurações | Sistema | Atributo Operacional | Gerenciar Atributo Operacional" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="SELECIONAR ATRIBUTO OPERACIONAL">	
+				<p>Selecione o Atributo Operacional para utilização em Tempo Real pelos Usuários do Sistema</p>
+				<br />
+			
+				<h:panelGrid id="pn_tb_atributo_operacional" style="width: 100%">				
+					<p:dataTable id="tabela_atributoOperacional" value="#{atributoOperacionalMB.buscarAtributoOperacionaisAtivos()}" var="atributoOperacional"
+						paginator="#{atributoOperacionalMB.buscarAtributoOperacionaisAtivos().size() > 5 ? 'true' : 'false'}" 
+						rows="5" emptyMessage="Nenhuma informação encontrada!"
+						paginatorAlwaysVisible="false" sortBy="#{atributoOperacional.titulo}"
+						paginatorPosition="bottom">
+		
+						<f:facet name="header">
+					TABELA DE ATRIBUTOS OPERACIONAIS
+					</f:facet>
+<!-- COLUNA A -->					
+						<p:column style="text-align: center; " rendered="#{!atributoOperacional.selecionado}">
+							<f:facet name="header">Ordem</f:facet>
+						
+							<h:outputText style="color: #B5B5B5" 
+							value="#{atributoOperacionalMB.buscarAtributoOperacionaisAtivos().indexOf(atributoOperacional) + 1}"/>					
+					
+						</p:column>	
+						
+						<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+							<f:facet name="header">Ordem</f:facet>
+	
+							<h:outputText style="font-weight: bold" 
+							value="#{atributoOperacionalMB.buscarAtributoOperacionaisAtivos().indexOf(atributoOperacional) + 1}"/>						
+						</p:column>						
+<!-- COLUNA B -->							
+						<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}">
+							<f:facet name="header">Título</f:facet>
+						
+							<h:outputText style="color: #B5B5B5" 
+							value="#{atributoOperacional.titulo}"/>	
+						</p:column>
+						
+						<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+							<f:facet name="header">Título</f:facet>
+							
+							<h:outputText style="font-weight: bold" 
+							value="#{atributoOperacional.titulo}"/>						
+						</p:column>						
+<!-- COLUNA C -->						
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}">
+						<f:facet name="header">Provedor SMS</f:facet>
+								
+						<h:outputText style="color: #B5B5B5"  
+						value="#{atributoOperacional.provedorSMS.nome}"/>						
+					</p:column>
+					
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+						<f:facet name="header">Provedor SMS</f:facet>
+
+						<h:outputText style="font-weight: bold"  
+						value="#{atributoOperacional.provedorSMS.nome}"/>						
+					</p:column>					
+<!-- COLUNA D -->						
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}">
+						<f:facet name="header">Tempo Atendimento</f:facet>					
+						
+						<h:outputText style="color: #B5B5B5"  
+						value="#{atributoOperacional.duracaoAtendimento} Minutos"/>					
+					</p:column>
+					
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+						<f:facet name="header">Tempo Atendimento</f:facet>
+						
+						<h:outputText style="font-weight: bold"  
+						value="#{atributoOperacional.duracaoAtendimento} Minutos"/>						
+					</p:column>					
+
+<!-- COLUNA E -->	
+					
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}" >
+						<f:facet name="header">Validação Telefone</f:facet>
+							
+						<h:outputText style="color: #B5B5B5" 
+						value="#{atributoOperacional.tempoValidacaoTelefone} Dias"/>						
+					</p:column>	
+					
+					<p:column style="text-align: center; background-color: #FFD700" rendered="#{atributoOperacional.selecionado}" >
+						<f:facet name="header">Validação Telefone</f:facet>
+						
+						<h:outputText style="font-weight: bold" 
+						value="#{atributoOperacional.tempoValidacaoTelefone} Dias"/>						
+					</p:column>						
+
+<!-- COLUNA F -->	
+					
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}" >
+						<f:facet name="header">Tabelas</f:facet>	
+						
+						<h:outputText style="color: #B5B5B5" 
+						value="#{atributoOperacional.numeroLinhaTabela} Linhas"/>						
+					</p:column>
+					
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+						<f:facet name="header">Tabelas</f:facet>
+						
+						<h:outputText style="font-weight: bold"  
+						value="#{atributoOperacional.numeroLinhaTabela} Linhas"/>						
+					</p:column>					
+
+<!-- COLUNA G -->	
+					
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}" >
+						<f:facet name="header">Consultas</f:facet>
+							
+						<h:outputText style="color: #B5B5B5" 
+						value="#{atributoOperacional.limitQuery} Dados"/>					
+					</p:column>
+					
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}">
+						<f:facet name="header">Consultas</f:facet>
+
+						<h:outputText style="font-weight: bold"  
+						value="#{atributoOperacional.limitQuery} Dados"/>						
+					</p:column>					
+
+<!-- COLUNA H -->	
+					
+					<p:column style="text-align: center;" rendered="#{!atributoOperacional.selecionado}">
+						<f:facet name="header">Selecionado</f:facet>
+						
+					</p:column>
+						
+					<p:column style="text-align: center; background-color: #FFD700;" rendered="#{atributoOperacional.selecionado}" >
+						<f:facet name="header">Selecionado</f:facet>
+						
+						<h:outputText style="font-weight: bold" 	
+						value="X"/>
+						
+					</p:column>						
+																																							
+					<p:column style="text-align: center">
+						<p:commandButton icon="ui-icon-pin-s"
+						title="Selecionar Atributo Operacional"
+						rendered="#{!atributoOperacional.selecionado}"
+						action="#{atributoOperacionalMB.selecionarAtributoOperacional(atributoOperacional)}"
+						update=":#{p:component('pn_tb_atributo_operacional')}, :#{p:component('messages')}">
+						</p:commandButton>
+					</p:column>		
+						<f:facet name="footer">
+							Total: 
+							#{atributoOperacionalMB.buscarAtributoOperacionaisAtivos().size()}
+						</f:facet>
+					</p:dataTable>
+					<br />
+					<p:fieldset  legend="DADOS DO ATRIBUTO OPERACIONAL SELECIONADO">	
+						<h:panelGrid id="panel_atributo_operacional" columns="1" cellpadding="5">
+						
+							<h:panelGrid columns="1">
+							<h:panelGrid columns="2">
+								<p:outputLabel for="id_atributo_operacional_titulo" value="Título: *" />
+								<p:inputText id="id_atributo_operacional_titulo"
+									maxlength="50"
+									disabled="true"
+									size="50"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.titulo}" />
+							
+								<p:outputLabel for="id_atributo_operacional_provedor_sms" value="Provedor SMS: " />
+								<h:selectOneMenu id="id_atributo_operacional_provedor_sms"
+									disabled="true"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.provedorSMS}">
+				
+									<f:selectItem itemLabel="Selecione um Provedor SMS"
+										noSelectionOption="true" />
+				
+									<f:selectItems value="#{atributoOperacionalMB.provedoresSMS}" var="provedor"
+										itemLabel="#{provedor.nome}" itemValue="#{provedor}">
+									</f:selectItems>
+				
+									<p:ajax event="valueChange" update="@this"></p:ajax>
+				
+								</h:selectOneMenu>					
+							</h:panelGrid>
+							
+							<h:panelGrid columns="3">	
+								<p:outputLabel for="id_atributo_operacional_duracao_atendimento" value="Duração dos Atendimentos: *" />
+								<p:spinner id="id_atributo_operacional_duracao_atendimento"
+									min="1"
+									stepFactor="1"
+									disabled="true"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.duracaoAtendimento}" />
+								<h:outputText value="Minutos"/>
+									
+								<p:outputLabel for="id_atributo_operacional_validacao_telefone" value="Tempo para validação de Telefone: *" />
+								<p:spinner id="id_atributo_operacional_validacao_telefone"
+									min="1"
+									stepFactor="1"
+									disabled="true"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.tempoValidacaoTelefone}" />	
+								<h:outputText value="Dias"/>
+									
+								<p:outputLabel for="id_atributo_operacional_total_linha_tabela" value="Total de Linhas em Tabelas: *" />
+								<p:spinner id="id_atributo_operacional_total_linha_tabela"
+									min="5"
+									stepFactor="1"
+									disabled="true"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.numeroLinhaTabela}" />
+								<h:outputText value="Linhas"/>
+									
+								<p:outputLabel for="id_atributo_operacional_limit_consulta_bd" value="Limite de Consulta no BD: *" />
+								<p:spinner id="id_atributo_operacional_limit_consulta_bd"
+									min="20"
+									stepFactor="25"
+									disabled="true"
+									value="#{atributoOperacionalMB.atributoOperacionalSelecionado.limitQuery}" />
+								<h:outputText value="Dados"/>
+							</h:panelGrid>																																		
+						</h:panelGrid>
+						</h:panelGrid>
+					</p:fieldset>								
+					
+					<br />
+					<h:panelGrid columns="2">			
+						<p:commandButton action="cadastrar-atributo-operacional" icon="ui-icon-plusthick"
+							value="Novo Atributo Operacional" />
+								
+						<p:commandButton action="manter-atributo-operacional" icon="ui-icon-pencil"
+							value="Manter Atributo Operacional"/>
+					</h:panelGrid>
+				</h:panelGrid>			
+			</p:panel>
+			<p:spacer height="100"/>						
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Paciente | Vincular Plano" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="VINCULAR PLANO" >	
+			<p>Preencha corretamente as informações para Vincular um Plano a Pacientes</p>
+			<br />
+			<h:panelGrid id="panel_plano" columns="1" cellpadding="5" width="100%">
+				
+				<p:fieldset legend="Selecionar Plano" rendered="#{planoPacienteMB.planoDTO.idPlano == null}">
+					
+					<h:panelGrid columns="2">
+					 	<h:outputLabel for="plano_estabelecimento" value="Estabelecimento: *" />							
+						<h:selectOneMenu id="plano_estabelecimento"
+							value="#{planoMB.planoDTO.estabelecimentoDTO}"
+							converter="estabelecimentoConverter">								
+
+							<f:selectItem itemLabel="Escolha uma opção"
+								noSelectionOption="true" />
+
+							<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+								var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+								itemValue="#{estabelecimento}">
+							</f:selectItems>
+								
+							<p:ajax event="valueChange" update=":#{p:component('panel_plano')}"></p:ajax>
+
+						</h:selectOneMenu>	
+					</h:panelGrid>
+					
+					<h:panelGrid columns="1" width="100%" rendered="#{planoMB.planoDTO.estabelecimentoDTO.idEstabelecimento != null}">
+						<p:dataTable id="tabela_plano"
+						value="#{planoMB.buscarPlanosVigentes()}" var="plano"
+						paginator="#{planoMB.buscarPlanosVigentes().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" 
+						rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+							<f:facet name="header">
+								TABELA DE PLANOS VIGENTES
+							</f:facet>
+								
+							<p:column style="text-align: center">
+								<f:facet name="header">Ordem</f:facet>
+									#{planoMB.buscarPlanosVigentes().indexOf(plano) + 1}
+							</p:column>	
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Nome</f:facet>
+									#{plano.nomePlano}
+							</p:column>	
+							
+							<p:column width="50%" style="text-align: center">
+								<f:facet name="header">Descrição</f:facet>
+									#{plano.descricaoPlano}
+							</p:column>		
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Meses</f:facet>
+
+									#{plano.totalMeses}
+							</p:column>
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Valor Total (R$)</f:facet>
+									#{plano.valorTotal}
+							</p:column>	
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Validade</f:facet>
+								<h:outputText value="#{plano.validade}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>		
+							</p:column>
+							
+							<p:column style="text-align: center" width="12%">
+								<p:commandButton icon="ui-icon-check"
+								title="Selecionar Plano Vigente"
+								action="#{planoPacienteMB.selecionarPlano(plano)}"
+								update=":#{p:component('panel_plano')},
+								:#{p:component('messages')}"
+								widgetVar="bt_selecionar_plano_wv_#{plano.idPlano}"
+								onclick="bt_selecionar_plano_wv_#{plano.idPlano}.disable()">
+								</p:commandButton>							
+							</p:column>							
+							
+							<f:facet name="footer">
+							Total de Planos Vigentes: 
+							#{planoMB.buscarPlanosVigentes().size()}
+							  
+							</f:facet>																																																			
+							</p:dataTable>
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Plano Selecionado" rendered="#{planoPacienteMB.planoDTO.idPlano != null}">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="Código: " />
+						<h:outputText value="#{planoPacienteMB.planoDTO.idPlano}" />
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{planoPacienteMB.planoDTO.nomePlano}" />
+						<h:outputText value="Total de Meses: " title="Cique para visualizar as mensalidades do Plano Selecionado."/>
+						<h:outputText value="#{planoPacienteMB.planoDTO.totalMeses}" />
+						<h:outputText value="Valor Total: R$ " />
+						<h:outputText value="#{planoPacienteMB.planoDTO.valorTotal}" />
+						<h:outputText value="Validade: " />
+						<h:outputText value="#{planoPacienteMB.planoDTO.validade}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+						
+						<h:panelGrid columns="2">
+							<p:commandButton icon="ui-icon-search"
+								title="Pesquisar Pacientes"
+								update=":#{p:component('dialog_paciente_busca')}"
+								oncomplete="dialog_paciente_busca_wv.show()"
+								widgetVar="bt_buscar_paciente_wv"
+								onclick="bt_buscar_paciente_wv.disable()">
+							</p:commandButton>
+							
+							<p:commandButton icon="ui-icon-closethick"
+								title="Remover seleção do Plano"
+								action="#{planoPacienteMB.removerSelecaoPlano()}"
+								update=":#{p:component('panel_plano')},
+								:#{p:component('messages')}"
+								widgetVar="bt_remover_selecao_plano_wv"
+								onclick="bt_remover_selecao_plano_wv.disable()">
+							</p:commandButton>
+						</h:panelGrid>
+						
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Pacientes Vinculados" rendered="#{planoPacienteMB.planoDTO.idPlano != null}">
+					
+						<p:fieldset legend="Filtros de Planos"
+						rendered="#{planoPacienteMB.planoDTO.idPlano != null}">	
+							<h:panelGrid id="panel_filtro_plano" columns="4">			
+								<p:outputLabel for="nome_paciente_busca"
+									value="Nome do Paciente: " />
+								<h:panelGrid columns="2">
+									<p:inputText id="nome_paciente_busca"
+										value="#{planoPacienteMB.pacienteNomeFiltro}"
+										size="80"
+										maxlength="100">
+										<p:ajax event="keyup"
+											update=":#{p:component('pn_paciente_plano')}"></p:ajax>
+									</p:inputText>
+									<p:watermark for="nome_paciente_busca"
+										value="Digite parte do nome ou sobrenome do Paciente...">
+									</p:watermark>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>					
+					
+					<h:panelGrid id="pn_paciente_plano" rendered="#{planoPacienteMB.planoDTO.idPlano != null}" width="100%">
+						<p:dataTable id="tabela_paciente_plano" widgetVar="tb_paciente_plano_wv"
+						value="#{planoPacienteMB.porPlanoEPacienteNome}" var="planoPaciente" lazy="true"
+						paginator="true" paginatorPosition="bottom" rows="5"
+						emptyMessage="Nenhum dado encontrado..." binding="#{planoPacienteMB.dataTable}">
+							
+							
+							<f:facet name="header">
+								TABELA DE PACIENTES VINCULADOS AO PLANO
+							</f:facet>
+								
+							<p:column style="text-align: center">
+								<f:facet name="header">Ordem</f:facet>
+									#{planoPacienteMB.porPlanoEPacienteNome.rowIndex + (planoPacienteMB.currentPage * planoPacienteMB.porPlano.pageSize) + 1}
+							</p:column>	
+							
+							<p:column width="5%" style="text-align: center">
+								<f:facet name="header"></f:facet>
+								<p:commandButton action="#{obsPacienteMB.selecionarPaciente(planoPaciente.paciente, 'A')}" 
+								icon="ui-icon-script"
+								title="Gerenciar Acordos com o Paciente: #{planoPaciente.paciente.nomeCompleto}"
+								oncomplete="dialog_obs_paciente_wv.show()"
+								update=":#{p:component('messages')}, 
+								:#{p:component('dialog_obs_paciente')}"/>	
+							</p:column>								
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Plano</f:facet>
+									#{planoPaciente.plano.nomePlano}
+							</p:column>	
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Meses</f:facet>
+									#{planoPaciente.plano.totalMeses}
+							</p:column>								
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Valor Total</f:facet>
+									R$ #{planoPaciente.plano.valorTotal}
+							</p:column>								
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Código</f:facet>
+								<h:outputText value="#{planoPaciente.paciente.idPaciente}" 
+								rendered="#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente('A', planoPaciente.paciente).size() == 0}"/>
+								
+								<h:outputText value="#{planoPaciente.paciente.idPaciente}" 
+								style="cursor: help; font-weight: bold; color: #F00; font-size: 15px"
+								title="Paciente com Acordos"
+								rendered="#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente('A', planoPaciente.paciente).size() > 0}"/>	
+							</p:column>
+							
+							<p:column style="text-align: center">
+								<f:facet name="header">Nome</f:facet>
+									<h:outputText value="#{planoPaciente.paciente.nomeCompleto}"
+									rendered="#{mensalidadePacienteMB.buscarTotalPorPlanoEPaciente(planoPaciente.plano, planoPaciente.paciente) > 0}"
+									style="cursor: help" title="Telefone: #{planoPaciente.paciente.telResidencial} / Celular: #{planoPaciente.paciente.cel01}"/> 
+									
+									<h:outputText value="#{planoPaciente.paciente.nomeCompleto}"
+									rendered="#{mensalidadePacienteMB.buscarTotalPorPlanoEPaciente(planoPaciente.plano, planoPaciente.paciente) == 0}"
+									style="cursor: help; color: #F00; font-weight:bold" title="É necessário carregar as mensalidades do paciente"/> 									
+							</p:column>	
+
+							<p:column style="text-align: center">	
+								<p:commandButton icon="ui-icon-gear"
+								rendered="#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPaciente.plano, planoPaciente.paciente).size() > 0}"
+								title="Gerenciar Mensalidades do Paciente"
+								action="#{mensalidadePacienteMB.selecionarPlanoPaciente(planoPaciente)}"
+								update=":#{p:component('dialog_paciente_mensalidade')},
+								:#{p:component('messages')}"
+								oncomplete="dialog_paciente_mensalidade_wv.show()"
+								widgetVar="bt_gerenciar_mensalidade_wv_#{planoPaciente.idPlanoPaciente}"
+								onclick="bt_gerenciar_mensalidade_wv_#{planoPaciente.idPlanoPaciente}.disable()">
+									<f:actionListener binding="#{mensalidadePacienteMB.validarMensalidades(planoPaciente)}"/>
+								</p:commandButton>	
+								
+								<p:commandButton icon="ui-icon-refresh"
+								rendered="#{mensalidadePacienteMB.buscarPorPlanoEPaciente(planoPaciente.plano, planoPaciente.paciente).size() == 0}"
+								title="Carregar Mensalidades do Paciente"
+								action="#{mensalidadePacienteMB.selecionarPlanoPaciente(planoPaciente)}"
+								update=":#{p:component('dialog_paciente_mensalidade')},
+								:#{p:component('messages')}"
+								oncomplete="dialog_paciente_mensalidade_wv.show()"
+								widgetVar="bt_carregar_mensalidade_wv_#{planoPaciente.idPlanoPaciente}"
+								onclick="bt_carregar_mensalidade_wv_#{planoPaciente.idPlanoPaciente}.disable()">
+								</p:commandButton>																
+								
+								<p:spacer width="5"/>
+								
+								<p:commandButton icon="ui-icon-closethick"
+								title="Inativar Plano do Paciente"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								action="#{planoPacienteMB.removerPlanoPaciente(planoPaciente)}"
+								update=":#{p:component('panel_plano')},
+								:#{p:component('messages')}"
+								widgetVar="bt_excluir_plano_wv_#{planoPaciente.idPlanoPaciente}"
+								onclick="bt_excluir_plano_wv_#{planoPaciente.idPlanoPaciente}.disable()">
+									<p:confirm header="Remoção de Vínculo" icon="ui-icon-alert" message="Deseja realmente remover o vínculo do Paciente com o Plano?"/>
+								</p:commandButton>		
+							</p:column>	
+							
+								<f:facet name="footer">
+									Total de Pacientes vinculados ao Plano: 
+									#{planoPacienteMB.porPlanoEPacienteNome.rowCount}
+								</f:facet>																																																							
+						</p:dataTable>					
+					</h:panelGrid>
+				</p:fieldset>				
+			</h:panelGrid>
+			</p:panel>	
+			<p:spacer height="200"/>
+			
+			
+			<p:dialog id="dialog_paciente_mensalidade" resizable="false" modal="true"
+				widgetVar="dialog_paciente_mensalidade_wv" header="MENSALIDADES DO PLANO"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="950" closable="false">
+
+				<h:panelGrid id="pn_mensalidade_plano" columns="1" cellpadding="5" width="100%">
+					<p:fieldset legend="Dados do Plano">
+						<h:panelGrid id="pn_dialog_dados_plano" columns="1">
+							<h:outputText value="Código: #{mensalidadePacienteMB.planoPacienteDTO.plano.idPlano}" />
+							<h:outputText value="Nome do Plano: #{mensalidadePacienteMB.planoPacienteDTO.plano.nomePlano}" />
+							<h:outputText value="Total de Meses: #{mensalidadePacienteMB.planoPacienteDTO.plano.totalMeses}" />
+							<h:outputText value="Valor Total: R$ #{mensalidadePacienteMB.planoPacienteDTO.plano.valorTotal}" />														
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Dados do Paciente">
+						<h:panelGrid id="pn_dialog_dados_paciente" columns="1">
+							<h:outputText value="Código: #{mensalidadePacienteMB.planoPacienteDTO.paciente.idPaciente}" />
+							<h:outputText value="Nome do Paciente: #{mensalidadePacienteMB.planoPacienteDTO.paciente.nomeCompleto}" />
+							<h:outputText value="Telefone: #{mensalidadePacienteMB.planoPacienteDTO.paciente.telResidencial}" />
+						</h:panelGrid>
+					</p:fieldset>					
+					
+					<p:fieldset legend="Mensalidades do Paciente">
+
+						<h:panelGrid columns="1" cellpadding="2" id="tb_mensalidade_paciente" width="100%">
+							<p:dataTable id="tabela_mensalidade_paciente"
+							value="#{mensalidadePacienteMB.carregarMensalidadesPaciente()}" var="mensalidade"
+							paginator="#{mensalidadePacienteMB.carregarMensalidadesPaciente().size() > 6 ? 'true' : 'false'}" rows="6"
+							emptyMessage="Nenhum dado encontrado...">
+								
+								<f:facet name="header">
+									TABELA DE MENSALIDADES DO PACIENTE
+								</f:facet>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Mes</f:facet>
+									#{mensalidade.planoMensalidade.mes}
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Data</f:facet>
+									<h:outputText value="#{mensalidade.dataMensalidade}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputText>
+									
+								</p:column>								
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Mes</f:facet>	
+									<h:outputText value="R$ #{mensalidade.planoMensalidade.valorMes}" rendered="#{mensalidade.planoMensalidade.valorReajustado == 0}"/>
+									<h:outputText value="R$ #{mensalidade.planoMensalidade.valorReajustado}" rendered="#{mensalidade.planoMensalidade.valorReajustado > 0}"
+									title="O Valor Mensal sofreu reajustes (Valor Original: #{mensalidade.planoMensalidade.valorMes} | Valor Reajustado: #{mensalidade.planoMensalidade.valorReajustado})"
+									style="cursor: help; color: #00F"/>
+								</p:column>
+								
+								<p:column width="5%" style="text-align: center">
+									<f:facet name="header">Valor Pago</f:facet>	
+									<h:outputText value="R$ #{mensalidade.valorPago}" />
+								</p:column>								
+								
+								<p:column width="40%" style="text-align: center">
+									<f:facet name="header">Situacao</f:facet>
+									<h:outputText value="#{mensalidade.situacao.situacao}"/>
+								</p:column>	
+								
+								<p:column width="15%" style="text-align: center">
+									<p:commandButton icon="ui-icon-star"
+									title="Abonar mensalidade do Paciente"
+									rendered="#{pagesMB.permissaoGestor and (mensalidade.situacao == 'E' or mensalidade.situacao == 'D')}"
+									action="#{mensalidadePacienteMB.abonarMensalidade(mensalidade)}"
+									update=":#{p:component('pn_mensalidade_plano')},
+									:#{p:component('messages')}"
+									widgetVar="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_abonar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento" icon="ui-icon-alert" message="Deseja realmente abonar a Mensalidade?"/>
+									</p:commandButton>	
+									
+									<p:spacer width="5"/>
+									
+									<p:commandButton icon="ui-icon-check"
+									title="Pagar mensalidade do Paciente"
+									rendered="#{pagesMB.permissaoGestor and mensalidade.situacao == 'E'}"
+									action="#{mensalidadePacienteMB.pagarMensalidade(mensalidade)}"
+									update=":#{p:component('pn_mensalidade_plano')},
+									:#{p:component('messages')}"
+									widgetVar="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}"
+									onclick="bt_pagar_mensalidade_wv_#{mensalidade.idMensalidadePaciente}.disable()">
+										<p:confirm header="Confirmação de Pagamento" icon="ui-icon-alert" message="Deseja Incluir o pagamento da Mensalidade?"/>
+									</p:commandButton>																	
+								</p:column>																							
+								
+								<f:facet name="footer">
+									Total de Mensalidades: 
+									#{mensalidadePacienteMB.carregarMensalidadesPaciente().size()}
+								</f:facet>																																			
+							</p:dataTable>																									
+						</h:panelGrid>										
+					</p:fieldset>
+					
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_paciente_mensalidade_wv.hide()"
+					update=":#{p:component('tabela_paciente_plano')}"/>					
+				</h:panelGrid>
+			</p:dialog>		
+			
+			
+			<p:dialog id="dialog_paciente_busca" resizable="false" modal="true" 
+			widgetVar="dialog_paciente_busca_wv" 
+			header="BUSCA DE PACIENTES">
+			<h:panelGrid columns="1" id="dialog_paciente_busca_pn">
+			
+			<p:fieldset legend="Dados do Plano Selecionado" toggleable="true">
+				<h:panelGrid columns="1">
+					<h:outputText value="Código: #{planoPacienteMB.planoDTO.idPlano}" />
+					<h:outputText value="Nome: #{planoPacienteMB.planoDTO.nomePlano}" />
+					<h:outputText value="Total de Meses: #{planoPacienteMB.planoDTO.totalMeses}" style="" title="Cique para visualizar as mensalidades do Plano Selecionado."/>
+					<h:outputText value="Valor Total: R$ #{planoPacienteMB.planoDTO.valorTotal}" />
+					<h:outputText value="Validade: #{planoPacienteMB.planoDTO.validade}" />	
+				</h:panelGrid>	
+			</p:fieldset>
+			
+			<p:fieldset legend="Filtro de Busca" toggleable="true">					
+						<h:panelGrid columns="1" cellspacing="10">					
+							<h:panelGrid id="filtro_paciente_busca_pn" columns="2">
+								<p:outputLabel for="filtro_paciente_busca"
+									value="Dados para busca: " />
+								<h:panelGrid columns="2">
+									<p:inputText id="filtro_paciente_busca"
+										value="#{pacienteMB.campoInteligenteBusca}"
+										size="80"
+										title="O Sistema inteligente de busca detecta se a busca será por ID, CPF, RG ou Nome. No entanto, deve-se seguir um padrão de busca conforme o exemplo a seguir: # Para buscas pelo ID deve-se digitar apenas números. Para buscas pelo CPF devese digitar os três primeiros dígitos do CPF e em seguida um ponto (123.). # Para buscas pelo RG deve-se digitar o primeiro dígito do RG e em seguida um ponto (1.). # Para buscas pelo Nome deve-se digitar qualquer parte do Nome ou Sobrenome."
+										maxlength="100">
+										<p:ajax event="keyup"
+											update=":#{p:component('dialog_paciente_busca_ls_pn')}"></p:ajax>
+									</p:inputText>
+									<p:watermark for="filtro_paciente_busca"
+										value="Digite parte do Código, CPF (Ex.: 123.), RG (Ex.: 1.) ou do Nome...">
+									</p:watermark>
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGrid>
+				</p:fieldset>
+				<br />	 			
+				<p:fieldset legend="Lista de pacientes">
+					<h:panelGrid id="dialog_paciente_busca_ls_pn" columns="2">	
+						<p:dataTable id="tabela_paciente_busca"
+							value="#{pacienteMB.buscaInteligente()}" var="paciente"
+							paginator="true" rows="5"
+							emptyMessage="Nenhum dado encontrado...">
+		
+							<f:facet name="header">
+						TABELA DE PACIENTES
+						</f:facet>
+								<p:column>
+									<f:facet name="header">Código</f:facet>
+							#{paciente.idPaciente}
+						</p:column>
+								<p:column>
+									<f:facet name="header">Nome</f:facet>
+									<p:outputLabel value="#{paciente.nomeCompleto}" 
+									rendered="#{pacienteMB.isTelefoneAtualizado(paciente) ? 'false' : 'true'}"
+									style="color: #F00; font-weight:bold; cursor: help;"
+									title="Paciente com dados de Comunicação desatualizados, favor confirmar, com o mesmo, se o Telefone e o Celular são os mesmos."/>
+									
+									<h:outputText value="#{paciente.nomeCompleto}" 
+									rendered="#{pacienteMB.isTelefoneAtualizado(paciente)}" 
+									title="DENTISTA: #{paciente.dentistaDTO.nomeComCROFormatado}"
+									style="cursor: help"/> 	
+						</p:column>
+								<p:column>
+									<f:facet name="header">CPF</f:facet>
+									<h:outputText value="(NÃO POSSUI)" 
+									rendered="#{(paciente.cpf == '000.000.000-00' or paciente.cpf == null) and !paciente.contratante}" 
+									title="Paciente dependente, o CPF não é obrigatório."
+									style="cursor: help"/> 
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{(paciente.cpf != '000.000.000-00' or paciente.cpf != null) and !paciente.contratante}"/>
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{paciente.cpf == '000.000.000-00' and paciente.contratante}" 
+									title="Paciente com CPF inválido, lembre-se de ATUALIZÁ-LO!"
+									style="cursor: help; color:#FF8C00; font-weight: bold"/> 	
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{paciente.cpf != '000.000.000-00' and paciente.contratante}"/> 
+						</p:column>			
+						
+								<p:column>
+									<f:facet name="header">Estabelecimento</f:facet>
+							#{paciente.estabelecimentoDTO.nomeEstabelecimentoFormatado}
+						</p:column>
+			
+								<p:column>
+									<f:facet name="header">Telefone</f:facet>
+							#{paciente.telResidencial}
+						</p:column>
+						
+								<p:column>
+									<f:facet name="header">Celular</f:facet>
+							( #{paciente.operadoraCel01.nomeOperadora} ) 
+							 #{paciente.cel01}
+						</p:column>
+												
+								<p:column>
+									<p:commandButton title="Vincular Paciente ao Plano: #{planoPacienteMB.planoDTO.nomePlano}"
+									icon="ui-icon-flag"
+										oncomplete="dialog_paciente_busca_wv.hide()"
+										action="#{planoPacienteMB.vincularPacienteAoPlano(paciente)}"
+										update=":#{p:component('messages')}, 
+										:#{p:component('panel_plano')}">
+									</p:commandButton>
+								</p:column>				
+							<f:facet name="footer">
+							Total: 
+							#{pacienteMB.buscaInteligente().size()}
+							</f:facet>
+						</p:dataTable>	
+											
+					</h:panelGrid>								
+				</p:fieldset>
+				
+				<h:panelGrid columns="2">					
+				<p:commandButton value="Voltar" 
+				onclick="dialog_paciente_busca_wv.hide()"
+				update=":#{p:component('panel_plano')}"/>				
+				</h:panelGrid>
+				 
+			</h:panelGrid>
+			</p:dialog>						
+			
+			<p:dialog id="dialog_obs_paciente" resizable="false" modal="true"
+				widgetVar="dialog_obs_paciente_wv" header="OBSERVAÇÕES DE ACORDOS DO PACIENTE"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" width="900">
+				<h:panelGrid id="pn_obs_paciente" columns="1" cellpadding="5" width="100%">
+					<p:fieldset legend="Dados do paciente">
+						<h:panelGrid columns="1">
+							<h:outputText value="Código: #{obsPacienteMB.pacienteDTO.idPaciente}" />
+							<h:outputText value="Nome: #{obsPacienteMB.pacienteDTO.nomeCompleto}" />
+							<h:outputText value="Telefone: #{obsPacienteMB.pacienteDTO.telResidencial}" />
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Dados da Observação">
+
+						<h:panelGrid columns="2" cellpadding="2" id="pn_incluir_obs_paciente">
+							<h:outputText value="Tipo de Observação: " />
+							<h:outputText value="#{obsPacienteMB.tipoObs.tipoObs}" />										
+							<p:outputLabel for="tx_obs_paciente" value="Observação: " />
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="tx_obs_paciente"
+								maxlength="350"
+								cols="50"
+								rows="8"
+								autoResize="true"
+								counter="display_tx_obs_paciente"
+								counterTemplate="{0} caracteres restantes."
+								value="#{obsPacienteMB.obsPacienteDTO.obs}">
+									<p:ajax event="valueChange" update=":#{p:component('pn_incluir_obs_paciente')}"/>
+								</p:inputTextarea>	
+								<h:outputText id="display_tx_obs_paciente" />	
+							</h:panelGrid>
+							
+							<h:panelGrid columns="2">			
+								<p:commandButton action="#{obsPacienteMB.salvar()}" icon="ui-icon-plusthick"	
+								disabled="#{obsPacienteMB.obsPacienteDTO.obs.length() == 0}"
+								value="Incluir Acordo" title="Inclui uma observação para o Paciente." update="messages, :#{p:component('pn_obs_paciente')}" />
+							</h:panelGrid>																						
+						</h:panelGrid>
+
+						<p:dataTable id="tabela_obs_paciente"
+						value="#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente()}" var="obsPaciente"
+						paginator="#{dentistaAgendaMB.dentistaAgendasFiltrados.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+							
+							<f:facet name="header">
+								TABELA DE ACORDOS DO PACIENTE
+							</f:facet>
+							
+							<p:column>
+								<f:facet name="header">Ordem</f:facet>
+								#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente().indexOf(obsPaciente) + 1}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Data</f:facet>
+								
+								<h:outputText value="#{obsPaciente.data}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Observação</f:facet>
+								#{obsPaciente.obs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Tipo</f:facet>
+								#{obsPaciente.tipo.tipoObs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header"> 
+									<h:outputText value="Responsável" 
+									title="Funcionário responsável pelo cadastro da 'Informação de Observação'"
+									style="cursor: help"/>
+								</f:facet>
+								<h:outputText value="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nome}" 
+								title="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nomeCompleto} / #{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).cargo.nomeCargo}"
+								style="cursor: help; color: gray;"/>
+							</p:column>							
+							
+							<p:column>
+								<p:commandButton 
+								icon="ui-icon-trash"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								action="#{obsPacienteMB.removerObsPaciente(obsPaciente)}"
+								update=":#{p:component('messages')}, :#{p:component('pn_obs_paciente')},
+								:#{p:component('pn_paciente_plano')}"
+								title="Remover Observação">
+								</p:commandButton>
+							</p:column>	
+							
+							<f:facet name="footer">
+								Total de Acordos: 
+								#{obsPacienteMB.buscarObsPacientesPeloTipoEPaciente().size()}
+							</f:facet>																																			
+						</p:dataTable>									
+					</p:fieldset>
+					
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_obs_paciente_wv.hide()"
+					update=":#{p:component('pn_paciente_plano')}"/>					
+				</h:panelGrid>
+			</p:dialog>				
+			
+
+			<p:confirmDialog global="true" showEffect="drop" hideEffect="drop">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>	
+			</p:confirmDialog>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

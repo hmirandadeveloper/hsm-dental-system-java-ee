@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+			
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Tabela | Estabelecimento | Cadastrar Estabelecimento" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />
+			<p:panel id="painel_estabelecimento" header="CADASTRAR ESTABELECIMENTO">
+				<p>Preencha corretamente as informações para cadastrar um Estabelecimento.<br />
+				</p>
+				<br />
+				<p:tabView effect="slide">
+
+					<p:tab title="Informações Básicas">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="estabelecimento_razao_social" value="Razão Social: *" />
+							<p:inputText id="estabelecimento_razao_social" maxlength="100" size="100"
+								value="#{estabelecimentoMB.estabelecimentoDTO.razaoSocial}" />
+
+							<h:outputLabel for="estabelecimento_nome_fantasia" value="Nome Fantasia: *" />
+							<p:inputText id="estabelecimento_nome_fantasia" size="100"
+								maxlength="100"
+								value="#{estabelecimentoMB.estabelecimentoDTO.nomeFantasia}" />									
+
+							<h:outputLabel for="estabelecimento_cnpj" value="CNPJ: *" />
+							<p:inputMask id="estabelecimento_cnpj" mask="99.999.999/9999-99"
+								value="#{estabelecimentoMB.estabelecimentoDTO.cnpj}" />									
+									
+							</h:panelGrid>		
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o Estabelecimento encontra-se na última aba." />
+					</p:tab>
+
+					<p:tab title="Informações de Comunicação">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="estabelecimento_email" value="Email: *" />
+							<p:inputText id="estabelecimento_email" size="50" maxlength="50"
+								value="#{estabelecimentoMB.estabelecimentoDTO.email}" />
+
+							<h:outputLabel for="estabelecimento_telefone" value="Telefone: *" />
+							<p:inputMask id="estabelecimento_telefone" mask="(99) 99999-9999" size="15"
+								value="#{estabelecimentoMB.estabelecimentoDTO.telefone}" />
+								
+							<h:outputLabel for="estabelecimento_fax" value="Fax: " />
+							<p:inputMask id="estabelecimento_fax" mask="(99) 99999-9999" size="15"
+								value="#{estabelecimentoMB.estabelecimentoDTO.fax}" />								
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o Estabelecimento encontra-se na última aba." />
+					</p:tab>
+					
+					<p:tab title="Informações do Endereço">
+						<h:panelGrid id="estabelecimento_endereco" columns="2" cellspacing="10">
+							<p:outputLabel for="estabelecimento_endereco_logradouro" value="Logradouro: *" />
+							<p:inputText id="estabelecimento_endereco_logradouro" 
+								maxlength="150" size="100"
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.logradouro}" />
+
+							<p:outputLabel for="estabelecimento_endereco_numero" value="Numero: *" />
+							<p:inputText id="estabelecimento_endereco_numero" mask="99999"
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.numero}" />
+								
+							<p:outputLabel for="estabelecimento_endereco_complemento" value="Complemento: " />
+							<p:inputText id="estabelecimento_endereco_complemento"
+								maxlength="300" size="100"
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.complemento}" />
+								
+							<p:outputLabel for="estabelecimento_endereco_bairro" value="Bairro: *" />
+							<p:inputText id="estabelecimento_endereco_bairro" 
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.bairro}" />
+								
+							<p:outputLabel for="estabelecimento_endereco_cidade" value="Cidade: *" />
+							<p:inputText id="estabelecimento_endereco_cidade" 
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.cidade}" />
+								
+							<p:outputLabel for="estabelecimento_endereco_uf" value="UF: *" />
+							<h:selectOneMenu id="estabelecimento_endereco_uf"
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.uf}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.ufs}" var="uf"
+									itemLabel="#{uf}" itemValue="#{uf}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('estabelecimento_endereco_uf')}"></p:ajax>
+
+							</h:selectOneMenu>
+								
+							<p:outputLabel for="estabelecimento_endereco_cep" value="CEP: *" />
+							<p:inputMask id="estabelecimento_endereco_cep" mask="99.999-999"
+								value="#{estabelecimentoMB.estabelecimentoDTO.enderecoDTO.cep}" />	
+								
+							<p:commandButton action="#{estabelecimentoMB.salvar()}"
+								value="Salvar Estabelecimento" update=":#{p:component('messages')}, :#{p:component('painel_estabelecimento')} " />
+						
+							<p:commandButton action="manter-estabelecimento"
+								value="Manter Estabelecimentos" immediate="true"/>																																																							
+						</h:panelGrid>
+						<br />
+						<br />
+					</p:tab>										
+				</p:tabView>
+				<p:spacer height="10"/>
+			</p:panel>
+				<p:spacer height="50"/>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

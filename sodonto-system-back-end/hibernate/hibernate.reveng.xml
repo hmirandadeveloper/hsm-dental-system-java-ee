@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_agendamento" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_atendimento" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_caixa" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_cargo" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_dentista" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_dentista_agenda" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_endereco" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_especialidade" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_especialidade_dentista" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_funcionario" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_mensalidade_paciente" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_movimentacao" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_msg_pre_email" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_msg_pre_torpedo" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_operadora" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_paciente" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_plano" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_plano_mensalidade" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_plano_paciente" />
+	<table-filter match-catalog="dbsodontosystem" match-name="tb_usuario" />
+</hibernate-reverse-engineering>

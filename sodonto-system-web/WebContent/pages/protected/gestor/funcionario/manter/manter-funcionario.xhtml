@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Recursos Humanos | Funcionário | Manter Funcionário" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="MANTER FUNCIONÁRIO">
+
+				<p:dataTable id="tabela_funcionario"
+					value="#{funcionarioMB.funcionarios}" var="funcionario"
+					paginator="#{funcionarioMB.funcionarios.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+					paginatorPosition="bottom"
+					emptyMessage="Nenhum dado encontrado...">
+
+					<f:facet name="header">
+			TABELA DE FUNCIONÁRIOS
+			</f:facet>
+					<p:column>
+						<f:facet name="header">Nome</f:facet>
+				#{funcionario.nomeCompleto}
+			</p:column>
+					<p:column>
+						<f:facet name="header">CPF</f:facet>
+				#{funcionario.cpf}
+			</p:column>
+			
+					<p:column>
+						<f:facet name="header">Perfil</f:facet>
+						<h:outputText value="#{funcionario.usuarioPerfil.perfilCadastro.perfil}"
+						rendered="#{funcionario.usuarioPerfil.perfilAtivo == 'T'}"
+						style="color: red; font-weight: bold; cursor: help;"
+						title="Perfil Ativo do Usuário ainda como TEMPORÁRIO, necessário ATIVAÇÃO"/>
+						
+						<h:outputText value="#{funcionario.usuarioPerfil.perfilCadastro.perfil}"
+						rendered="#{funcionario.usuarioPerfil.perfilAtivo != 'T'}"
+						style="font-weight: bold;color: blue; cursor: help;"
+						title="Perfil de Usuário ATIVADO"/>
+			</p:column>			
+			
+					<p:column>
+						<f:facet name="header">Cargo</f:facet>
+				#{funcionario.cargo.nomeCargo}
+			</p:column>
+
+					<p:column>
+						<f:facet name="header">Telefone</f:facet>
+				#{funcionario.telResidencial}
+			</p:column>
+			
+					<p:column>
+						<f:facet name="header">Estabelecimento / CNPJ</f:facet>
+				#{funcionario.estabelecimentoDTO.cnpj}
+			</p:column>			
+					<p:column>
+						<p:commandButton value="Alterar"
+							oncomplete="dialog_funcionario_wv.show()"
+							icon="ui-icon-pencil"
+							action="#{funcionarioMB.alterarFuncionario(funcionario)}"
+							update=":#{p:component('dialog_funcionario')}"
+							disabled ="#{funcionario.usuarioPerfil.perfilAtivo == 'A' ? 'true' : 'false'}">
+						</p:commandButton>
+					</p:column>
+					<p:column>
+						<p:commandButton value="Reenviar Senha"
+							icon="ui-icon-transferthick-e-w"
+							action="#{funcionarioMB.reenviarEmail(funcionario)}"
+							update=":#{p:component('messages')}"
+							disabled ="#{funcionario.usuarioPerfil.perfilAtivo != 'T' ? 'true' : 'false'}">
+						</p:commandButton>
+					</p:column>					
+					<f:facet name="footer">
+					Total: 
+					#{funcionarioMB.funcionarios.size()}
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+			
+			<p:spacer height="150"/>
+			
+			<p:dialog id="dialog_funcionario" resizable="false" modal="true"
+				widgetVar="dialog_funcionario_wv">
+				<p:tabView effect="slide">
+
+					<p:tab title="Informações Pessoais">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="funcionario_nome" value="Nome: *" />
+							<p:inputText id="funcionario_nome" maxlength="50" size="50"
+								value="#{funcionarioMB.funcionarioDTO.nome}" />
+
+							<h:outputLabel for="funcionario_sobrenome" value="Sobrenome: *" />
+							<p:inputText id="funcionario_sobrenome" maxlength="100"
+								value="#{funcionarioMB.funcionarioDTO.sobrenome}" />									
+
+							<h:outputLabel for="funcionario_cpf" value="CPF: *" />
+							<p:inputMask id="funcionario_cpf" mask="999.999.999-99"
+								value="#{funcionarioMB.funcionarioDTO.cpf}" />
+								
+							<h:outputLabel for="funcionario_pis_nit" value="PIS/NIT: *" />
+							<p:inputMask id="funcionario_pis_nit" mask="99999999999"
+								value="#{funcionarioMB.funcionarioDTO.pisNit}" />								
+								
+							<h:outputLabel for="funcionario_rg" value="R.G: " />
+							<h:panelGrid columns="3">
+								<p:inputMask id="funcionario_rg" mask="9.999.999" size="8"
+									value="#{funcionarioMB.funcionarioDTO.rg}" />
+								<p:inputMask id="funcionario_rg_orgao" mask="aaa" size="3"
+									value="#{funcionarioMB.funcionarioDTO.rgOrgao}" />
+									
+							<h:selectOneMenu id="funcionario_rg_uf"
+								value="#{funcionarioMB.funcionarioDTO.rgUf}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.ufs}" var="uf"
+									itemLabel="#{uf}" itemValue="#{uf}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('funcionario_rg_uf')}"></p:ajax>
+
+							</h:selectOneMenu>										
+									
+							</h:panelGrid>		
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o funcionário, encontra-se na última aba." />
+					</p:tab>
+
+					<p:tab title="Informações de Comunicação">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="funcionario_email" value="Email: *" />
+							<p:inputText id="funcionario_email" size="50" maxlength="50"
+								value="#{funcionarioMB.funcionarioDTO.email}" />
+
+							<h:outputLabel for="funcionario_telefone" value="Telefone: *" />
+							<p:inputMask id="funcionario_telefone" mask="(99) 99999-9999" size="15"
+								value="#{funcionarioMB.funcionarioDTO.telResidencial}" />
+								
+							<h:outputLabel for="funcionario_celular_01" value="Celular (Principal): *" />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="funcionario_cel01_op"
+									value="#{funcionarioMB.funcionarioDTO.operadoraCel01}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('funcionario_cel01_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="funcionario_celular_01" mask="(99) 99999-9999" size="15"
+									value="#{funcionarioMB.funcionarioDTO.cel01}" />
+							</h:panelGrid>	
+							
+							<h:outputLabel for="funcionario_celular_02" value="Celular (Secundário 01): " />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="funcionario_cel02_op"
+									value="#{funcionarioMB.funcionarioDTO.operadoraCel02}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('funcionario_cel02_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="funcionario_celular" mask="(99) 99999-9999" size="15"
+									value="#{funcionarioMB.funcionarioDTO.cel02}" />
+							</h:panelGrid>
+							
+							<h:outputLabel for="funcionario_celular_03" value="Celular (Secundário 02): " />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="funcionario_cel03_op"
+									value="#{funcionarioMB.funcionarioDTO.operadoraCel03}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('funcionario_cel03_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="funcionario_celular_03" mask="(99) 99999-9999" size="15"
+									value="#{funcionarioMB.funcionarioDTO.cel03}" />
+							</h:panelGrid>																					
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o funcionário, encontra-se na última aba." />
+					</p:tab>
+					
+					<p:tab title="Informações do Endereço">
+						<h:panelGrid id="funcionario_endereco" columns="2" cellspacing="10">
+							<p:outputLabel for="funcionario_endereco_logradouro" value="Logradouro: " />
+							<p:inputText id="funcionario_endereco_logradouro"
+								maxlength="150" size="100"
+								value="#{funcionarioMB.funcionarioDTO.endereco.logradouro}" />
+
+							<p:outputLabel for="funcionario_endereco_numero" value="Numero: " />
+							<p:inputText id="funcionario_endereco_numero" mask="99999"
+								value="#{funcionarioMB.funcionarioDTO.endereco.numero}" />
+								
+							<p:outputLabel for="funcionario_endereco_complemento" value="Complemento: " />
+							<p:inputText id="funcionario_endereco_complemento"
+								maxlength="300" size="100"
+								value="#{funcionarioMB.funcionarioDTO.endereco.complemento}" />
+								
+							<p:outputLabel for="funcionario_endereco_bairro" value="Bairro: " />
+							<p:inputText id="funcionario_endereco_bairro" 
+								value="#{funcionarioMB.funcionarioDTO.endereco.bairro}" />
+								
+							<p:outputLabel for="funcionario_endereco_cidade" value="Cidade: " />
+							<p:inputText id="funcionario_endereco_cidade" 
+								value="#{funcionarioMB.funcionarioDTO.endereco.cidade}" />
+								
+							<p:outputLabel for="funcionario_endereco_uf" value="UF: " />
+							<h:selectOneMenu id="funcionario_endereco_uf"
+								value="#{funcionarioMB.funcionarioDTO.endereco.uf}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.ufs}" var="uf"
+									itemLabel="#{uf}" itemValue="#{uf}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('funcionario_endereco_uf')}"></p:ajax>
+
+							</h:selectOneMenu>
+								
+							<p:outputLabel for="funcionario_endereco_cep" value="CEP: " />
+							<p:inputMask id="funcionario_endereco_cep" mask="99.999-999"
+								value="#{funcionarioMB.funcionarioDTO.endereco.cep}" />																																															
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o funcionário, encontra-se na última aba." />
+					</p:tab>					
+					
+					<p:tab title="Informações do Cargo">
+						<h:panelGrid id="funcionario_info_cargo" columns="2" cellspacing="10">
+							
+							<h:outputLabel for="funcionario_estabelecimento" value="Estabelecimento: *" />							
+							<h:selectOneMenu id="funcionario_estabelecimento"
+								value="#{funcionarioMB.funcionarioDTO.estabelecimentoDTO}"
+								converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('funcionario_info_cargo')}"></p:ajax>
+
+							</h:selectOneMenu>								
+							
+							<h:outputLabel for="funcionario_cargo" value="Cargo: *" />							
+							<h:selectOneMenu id="funcionario_cargo"
+								value="#{funcionarioMB.funcionarioDTO.cargo}"
+								converter="cargoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{cargoMB.cargosFiltrados}" var="cargo"
+									itemLabel="#{cargo.nomeCargo}" itemValue="#{cargo}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('funcionario_info_cargo')}"></p:ajax>
+
+							</h:selectOneMenu>														
+
+							<h:outputLabel for="funcionario_data_contratacao" value="Data de Contratação: *" />
+							<p:calendar locale="pt" id="funcionario_data_contratacao" pattern="dd/MM/yyyy"
+								value="#{funcionarioMB.funcionarioDTO.dataContratacao}" />	
+
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o funcionário, encontra-se na última aba." />
+					</p:tab>					
+
+					<p:tab title="Informações de usuário">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="funcionario_usuario_login" value="Nome de Usuário/Login: *" />
+							<h:inputText id="funcionario_usuario_login" maxlength="15"
+								value="#{funcionarioMB.funcionarioDTO.usuarioPerfil.usuario}" />
+								
+							<h:outputLabel for="funcionario_usuario_perfil" value="Perfil do Usuário: *" />
+							<h:selectOneMenu id="funcionario_usuario_perfil"
+								value="#{funcionarioMB.funcionarioDTO.usuarioPerfil.perfilCadastro}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{usuarioMB.perfisUsuario}" var="perfil"
+									itemLabel="#{perfil.perfil}" itemValue="#{perfil}">
+								</f:selectItems>
+
+							</h:selectOneMenu>							
+
+							<p:commandButton action="#{funcionarioMB.alterar()}"
+								icon="ui-icon-disk"
+								value="Salvar Alterações" update=":#{p:component('messages')},
+								:#{p:component('tabela_funcionario')}" 
+								oncomplete="dialog_funcionario_wv.hide()"
+								widgetVar="bt_salvar_alteracao_funcionario_wv"
+								onclick="bt_salvar_alteracao_funcionario_wv.disable()"/>
+						
+							<p:commandButton value="Voltar" immediate="true"
+							icon="ui-icon-arrowrefresh-1-w" 
+							oncomplete="dialog_funcionario_wv.hide()"/>						
+						</h:panelGrid>
+					</p:tab>
+				</p:tabView>
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

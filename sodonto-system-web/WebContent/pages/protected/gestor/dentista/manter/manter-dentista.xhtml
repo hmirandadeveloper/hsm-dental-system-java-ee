@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Recursos Humanos | Dentista | Manter Dentista" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="MANTER DENTISTA">
+
+				<p:dataTable id="tabela_dentista"
+					value="#{dentistaMB.dentistas}" var="dentista"
+					paginator="#{dentistaMB.dentistas.size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+					emptyMessage="Nenhum dado encontrado...">
+
+					<f:facet name="header">
+			TABELA DE DENTISTAS
+			</f:facet>
+					<p:column>
+						<f:facet name="header">Nome</f:facet>
+				#{dentista.nomeCompleto}
+			</p:column>
+					<p:column>
+						<f:facet name="header">CPF</f:facet>
+				#{dentista.cpf}
+			</p:column>
+			
+					<p:column>
+						<f:facet name="header">CRO</f:facet>
+				#{dentista.croUf} - 
+				#{dentista.cro}
+			</p:column>						
+					<p:column>
+						<f:facet name="header">Estabelecimento / CNPJ</f:facet>
+				#{dentista.estabelecimentoDTO.cnpj}
+			</p:column>			
+					<p:column>
+						<p:commandButton value="Alterar"
+							oncomplete="dialog_dentista_wv.show()"
+							icon="ui-icon-pencil"
+							action="#{dentistaMB.alterarDentista(dentista)}"
+							update=":#{p:component('dialog_dentista')}">
+						</p:commandButton>
+					</p:column>					
+					<f:facet name="footer">
+					Total: 
+					#{dentistaMB.dentistas.size()}
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+			
+			
+			<p:dialog id="dialog_dentista" resizable="false" modal="true"
+				widgetVar="dialog_dentista_wv">
+				<p:tabView effect="slide">
+
+					<p:tab title="Informações Pessoais">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="dentista_nome" value="Nome: *" />
+							<p:inputText id="dentista_nome" maxlength="50" size="50"
+								value="#{dentistaMB.dentistaDTO.nome}" />
+
+							<h:outputLabel for="dentista_sobrenome" value="Sobrenome: *" />
+							<p:inputText id="dentista_sobrenome" maxlength="100"
+								value="#{dentistaMB.dentistaDTO.sobrenome}" />									
+
+							<h:outputLabel for="dentista_cpf" value="CPF: *" />
+							<p:inputMask id="dentista_cpf" mask="999.999.999-99"
+								value="#{dentistaMB.dentistaDTO.cpf}" />
+								
+							<h:outputLabel for="dentista_pis_nit" value="PIS/NIT: *" />
+							<p:inputMask id="dentista_pis_nit" mask="99999999999"
+								value="#{dentistaMB.dentistaDTO.pisNit}" />										
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o dentista, encontra-se na última aba." />
+					</p:tab>
+
+					<p:tab title="Informações do Dentista">
+						<h:panelGrid columns="2" cellspacing="10">
+
+							<h:outputLabel for="dentista_cro_uf" value="Celular (Principal): *" />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="dentista_cel01_op"
+									value="#{dentistaMB.dentistaDTO.croUf}">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{pagesMB.ufs}" var="uf"
+										itemLabel="#{uf}" itemValue="#{uf}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('dentista_cel01_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="dentista_celular_01" mask="?999999" size="8"
+									value="#{dentistaMB.dentistaDTO.cro}" />
+							</h:panelGrid>																						
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o dentista, encontra-se na última aba." />
+					</p:tab>					
+					
+					<p:tab title="Informações Profissionais">
+						<h:panelGrid id="dentista_info_cargo" columns="2" cellspacing="10">
+							
+							<h:outputLabel for="dentista_estabelecimento" value="Estabelecimento: *" />							
+							<h:selectOneMenu id="dentista_estabelecimento"
+								value="#{dentistaMB.dentistaDTO.estabelecimentoDTO}"
+								converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('dentista_info_cargo')}"></p:ajax>
+
+							</h:selectOneMenu>								
+						</h:panelGrid>
+						<br />
+						<br />
+						<p:commandButton action="#{dentistaMB.alterar()}"
+							icon="ui-icon-disk"
+							value="Salvar Alterações" update=":#{p:component('messages')},
+							:#{p:component('tabela_dentista')}" 
+							oncomplete="dialog_dentista_wv.hide()"/>
+						
+						<p:commandButton value="Voltar" immediate="true"
+							icon="ui-icon-arrowrefresh-1-w" 
+							oncomplete="dialog_dentista_wv.hide()"/>						
+					</p:tab>					
+				</p:tabView>
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

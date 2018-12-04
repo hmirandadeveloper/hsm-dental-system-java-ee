@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Paciente | Visualizar | Agendamentos" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="VISUALIZAR AGENDAMENTOS DO PACIENTE">	
+			<p>Selecione um Paciente para Visualizar todos os seus Agendamentos, ordenados do mais recente ao mais antigo.</p>
+			<br />
+			<h:panelGrid id="panel_agendamento" columns="1" cellpadding="5" width="100%">
+				<p:fieldset legend="Seleção de Paciente" toggleable="true"
+				rendered="#{agendamentoMB.agendamentoDTO.paciente.idPaciente == null}">
+
+					<p:fieldset legend="Filtro de Busca" toggleable="true">					
+								<h:panelGrid columns="1" cellspacing="10">					
+									<h:panelGrid id="filtro_paciente_busca_pn" columns="2">
+										<p:outputLabel for="filtro_paciente_busca"
+											value="Dados para busca: " />
+										<h:panelGrid columns="2">
+											<p:inputText id="filtro_paciente_busca"
+												value="#{pacienteMB.campoInteligenteBusca}"
+												size="80"
+												title="O Sistema inteligente de busca detecta se a busca será por ID, CPF, RG ou Nome. No entanto, deve-se seguir um padrão de busca conforme o exemplo a seguir: # Para buscas pelo ID deve-se digitar apenas números. Para buscas pelo CPF devese digitar os três primeiros dígitos do CPF e em seguida um ponto (123.). # Para buscas pelo RG deve-se digitar o primeiro dígito do RG e em seguida um ponto (1.). # Para buscas pelo Nome deve-se digitar qualquer parte do Nome ou Sobrenome."
+												maxlength="100">
+												<p:ajax event="keyup"
+													update=":#{p:component('tabela_paciente_pn')}"></p:ajax>
+											</p:inputText>
+											<p:watermark for="filtro_paciente_busca"
+												value="Digite parte do Código, CPF (Ex.: 123.), RG (Ex.: 1.) ou do Nome...">
+											</p:watermark>
+										</h:panelGrid>
+									</h:panelGrid>
+								</h:panelGrid>
+						</p:fieldset>
+						<br />				
+					
+					<h:panelGrid id="tabela_paciente_pn" columns="1" width="100%">
+					<p:dataTable id="tabela_paciente"
+							value="#{pacienteMB.buscaInteligente()}" var="paciente"
+							paginator="#{pacienteMB.buscaInteligente().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+							emptyMessage="Nenhum dado encontrado..."
+							rendered="#{pacienteMB.campoInteligenteBusca.equals('') ? 'false' : 'true'}">
+		
+							<f:facet name="header">
+					TABELA DE PACIENTES
+					</f:facet>
+							<p:column width="5%" style="text-align: center">
+								<f:facet name="header"></f:facet>
+									<p:commandButton action="#{obsPacienteMB.selecionarPaciente(paciente, 'C')}" 
+									icon="ui-icon-alert"
+									title="Visualizar Observações do Paciente: #{paciente.nomeCompleto}"
+									oncomplete="dialog_obs_paciente_wv.show()"
+									update=":#{p:component('messages')}, 
+									:#{p:component('dialog_obs_paciente')}"/>	
+							</p:column>						
+							<p:column>
+								<f:facet name="header">Código</f:facet>
+									#{paciente.idPaciente}
+								</p:column>							
+										<p:column>
+									<f:facet name="header">Nome</f:facet>								
+									<p:outputLabel value="#{paciente.nomeCompleto}" 
+									rendered="#{pacienteMB.isTelefoneAtualizado(paciente) ? 'false' : 'true'}"
+									style="color: #F00; font-weight:bold; cursor: help;"
+									title="Paciente com dados de Comunicação desatualizados, favor confirmar, com o mesmo, se o Telefone e o Celular são os mesmos."/>
+									
+									<h:outputText value="#{paciente.nomeCompleto}" 
+									rendered="#{pacienteMB.isTelefoneAtualizado(paciente)}" 
+									title="DENTISTA: #{paciente.dentistaDTO.nomeComCROFormatado}"
+									style="cursor: help"/>					 
+									</p:column>
+										<p:column>
+											<f:facet name="header">Tipo</f:facet>
+									#{paciente.contratante ? 'TITULAR' : 'DEPENDENTE'}
+								</p:column>							
+										<p:column >
+											<f:facet name="header">CPF</f:facet>
+									#{paciente.cpf == '' or paciente.cpf == null ? '(NÃO POSSUI)' : paciente.cpf}
+								</p:column>			
+								
+										<p:column>
+											<f:facet name="header">Estabelecimento</f:facet>
+									#{paciente.estabelecimentoDTO.nomeEstabelecimentoFormatado}
+								</p:column>
+					
+										<p:column>
+											<f:facet name="header">Telefone</f:facet>
+									#{paciente.telResidencial}
+								</p:column>
+								
+										<p:column>
+											<f:facet name="header">Operadora</f:facet>
+									(#{paciente.operadoraCel01.nomeOperadora}) 
+								</p:column>						
+								
+										<p:column>
+											<f:facet name="header">Celular</f:facet>
+									 #{paciente.cel01}
+								</p:column>		
+							<p:column>
+								<p:commandButton value="Selecionar"
+									icon="ui-icon-plusthick"
+									action="#{agendamentoMB.selecionarPaciente(paciente)}"
+									update=":#{p:component('panel_agendamento')},
+									:#{p:component('messages')}">
+								</p:commandButton>							
+							</p:column>				
+							<f:facet name="footer">
+							Total: 
+							#{pacienteMB.buscaInteligente().size()}
+							</f:facet>
+						</p:dataTable>
+						</h:panelGrid>
+
+				</p:fieldset>
+				
+				<p:fieldset legend="Dados do Paciente Selecionado"
+				rendered="#{agendamentoMB.agendamentoDTO.paciente.idPaciente != null}">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="ID: " />
+						<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.idPaciente}" />						
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.nomeCompleto}" />
+						<h:outputText value="Telefone: " />
+						<h:outputText value="#{agendamentoMB.agendamentoDTO.paciente.telResidencial}" />	
+																							
+						<p:commandButton icon="ui-icon-closethick" title="Remover seleção de Paciente" 
+						action="#{agendamentoMB.removerSelecaoPaciente()}" update=":#{p:component('panel_agendamento')}"/>
+					</h:panelGrid>
+				</p:fieldset>
+				
+						<p:dataTable id="tabela_agenda_paciente"
+						rendered="#{agendamentoMB.agendamentoDTO.paciente.idPaciente != null}"
+						value="#{agendamentoMB.agendamentosFiltrados}" var="agendamento"
+						paginator="#{agendamentoMB.buscarPorDentista().size() > 10 ? 'true' : 'false'}" rows="10"
+						emptyMessage="Nenhum dado encontrado...">
+
+							<f:facet name="header">
+								<h:outputText value="TABELA DE AGENDAMENTOS - PACIENTE: #{agendamentoMB.agendamentoDTO.paciente.nomeCompleto}  | "/>
+								
+								<p:commandButton action="#{obsPacienteMB.selecionarPaciente(agendamentoMB.agendamentoDTO.paciente, 'G')}" 
+								icon="ui-icon-alert"
+								title="Visualizar Observações do Paciente Selecionado"
+								oncomplete="dialog_obs_paciente_wv.show()"
+								update=":#{p:component('messages')}, 
+								:#{p:component('dialog_obs_paciente')}"/>	
+								
+								<p:spacer width="10"/>								
+								
+								<p:commandButton icon="ui-icon-refresh" 
+								update=":#{p:component('panel_agendamento')}"
+								title="Atualizar Tabela"/>
+															
+							</f:facet>
+							<p:column width="5%" style="text-align: center">
+								<f:facet name="header">Ordem</f:facet>
+								#{agendamentoMB.agendamentosFiltrados.indexOf(agendamento) + 1}
+							</p:column>						
+							
+							<p:column width="25%" style="text-align: center">
+								<f:facet name="header">Dentista</f:facet>
+									<h:outputText rendered="#{agendamento.paciente.dentistaDTO.idDentista == agendamento.dentistaAgenda.dentista.idDentista}" value="#{agendamento.dentistaAgenda.dentista.nomeComCROFormatado}" />
+									<h:outputText rendered="#{agendamento.paciente.dentistaDTO.idDentista != agendamento.dentistaAgenda.dentista.idDentista}" value="#{agendamento.dentistaAgenda.dentista.nomeComCROFormatado}" 
+									style="cursor: help; color: red; font-weight:bold" 
+									title="Paciente vinculado ao Dentista: #{agendamento.paciente.dentistaDTO.nomeComCROFormatado}"/>
+							</p:column>																													
+							
+							<p:column width="10%" style="text-align: center">
+								<f:facet name="header">Data</f:facet>
+								<h:outputText value="#{agendamento.dentistaAgenda.dataAgenda}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>	
+							
+							<p:column width="20%" style="text-align: center">
+								<f:facet name="header">Intervalo Horário</f:facet>
+								#{agendamento.dentistaAgenda.intervaloTempo}
+							</p:column>	
+							
+							<p:column width="20%" style="text-align: center">
+								<f:facet name="header">Situação</f:facet>
+								#{agendamento.situacao.situacao}
+							</p:column>																					
+							
+							<f:facet name="footer">
+							Total de Agendamentos: 
+							#{agendamentoMB.agendamentosFiltrados.size()}
+							  
+							</f:facet>																												
+						</p:dataTable>
+				<h:panelGrid columns="2" >
+					<p:commandButton value="Gerenciar Agendamentos" icon="ui-icon-pencil"
+					action="gerenciar-agendamento"/>
+					
+					<p:commandButton value="Visualizar Atendimentos" icon="ui-icon-calendar"
+					action="visualizar-atendimento-paciente"/>				
+				</h:panelGrid>
+			</h:panelGrid>
+			</p:panel>
+			<p:spacer height="150"/>	
+			
+			<p:dialog id="dialog_obs_paciente" resizable="false" modal="true"
+				widgetVar="dialog_obs_paciente_wv" header="OBSERVAÇÕES DO PACIENTE"
+				closeOnEscape="true" hideEffect="clip"
+				showEffect="clip" >
+				<h:panelGrid id="pn_obs_paciente" columns="1" cellpadding="5">
+					<p:fieldset legend="Dados do paciente">
+						<h:panelGrid columns="1">
+							<h:outputText value="Código: #{obsPacienteMB.pacienteDTO.idPaciente}" />
+							<h:outputText value="Nome: #{obsPacienteMB.pacienteDTO.nomeCompleto}" />
+							<h:outputText value="Telefone: #{obsPacienteMB.pacienteDTO.telResidencial}" />
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset legend="Observações">
+
+						<h:panelGrid columns="2" cellpadding="2" id="pn_incluir_obs_paciente">
+							<h:outputText value="Tipo de Observação: " />
+							<h:outputText value="#{obsPacienteMB.obsPacienteDTO.tipo.tipoObs}" />										
+							<p:outputLabel for="tx_obs_paciente" value="Observação: " />
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="tx_obs_paciente"
+								maxlength="450"
+								cols="50"
+								rows="8"
+								autoResize="true"
+								counter="display_tx_obs_paciente"
+								counterTemplate="{0} caracteres restantes."
+								value="#{obsPacienteMB.obsPacienteDTO.obs}">
+									<p:ajax event="valueChange" update=":#{p:component('pn_incluir_obs_paciente')}"/>
+								</p:inputTextarea>	
+								<h:outputText id="display_tx_obs_paciente" />	
+							</h:panelGrid>
+							
+							<h:panelGrid columns="2">			
+								<p:commandButton action="#{obsPacienteMB.salvar()}" icon="ui-icon-plusthick"	
+								disabled="#{obsPacienteMB.obsPacienteDTO.obs.length() == 0}"
+								value="Incluir Observação" title="Inclui uma observação para o Paciente." update="messages, :#{p:component('pn_obs_paciente')}" />
+							</h:panelGrid>																						
+						</h:panelGrid>
+
+						<p:dataTable id="tabela_obs_paciente"
+						value="#{obsPacienteMB.buscarObsPacientesPeloPaciente()}" var="obsPaciente"
+						paginator="#{obsPacienteMB.buscarObsPacientesPeloPaciente().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+							
+							<f:facet name="header">
+								TABELA DO OBSERVAÇÕES DO PACIENTE
+							</f:facet>
+							
+							<p:column>
+								<f:facet name="header">Ordem</f:facet>
+								#{obsPacienteMB.buscarObsPacientesPeloPaciente().indexOf(obsPaciente) + 1}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Data</f:facet>
+								
+								<h:outputText value="#{obsPaciente.data}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column width="50%">
+								<f:facet name="header">Observação</f:facet>
+								#{obsPaciente.obs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">Tipo</f:facet>
+								#{obsPaciente.tipo.tipoObs}
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header"> 
+									<h:outputText value="Responsável" 
+									title="Funcionário responsável pelo cadastro da 'Informação de Observação'"
+									style="cursor: help"/>
+								</f:facet>
+								<h:outputText value="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nome}" 
+								title="#{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).nomeCompleto} / #{funcionarioMB.buscarPeloIdUsuario(obsPaciente.usuarioDTO.idUsuario).cargo.nomeCargo}"
+								style="cursor: help; color: gray;"/>
+							</p:column>							
+							
+							<p:column>
+								<p:commandButton 
+								icon="ui-icon-trash"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								action="#{obsPacienteMB.removerObsPaciente(obsPaciente)}"
+								update=":#{p:component('messages')}, :#{p:component('pn_obs_paciente')}"
+								title="Remover Observação">
+								</p:commandButton>
+							</p:column>	
+							
+							<f:facet name="footer">
+								Total de Observações: 
+								#{obsPacienteMB.buscarObsPacientesPeloPaciente().size()}
+							</f:facet>																																			
+						</p:dataTable>									
+					</p:fieldset>
+					
+					<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					value="Voltar" immediate="true" onclick="dialog_obs_paciente_wv.hide()"/>					
+				</h:panelGrid>
+			</p:dialog>									
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

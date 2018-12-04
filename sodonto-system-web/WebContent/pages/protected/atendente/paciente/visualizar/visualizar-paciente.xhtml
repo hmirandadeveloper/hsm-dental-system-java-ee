@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+			
+			<p:growl id="messages" />
+			
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Paciente | Visualizar Paciente" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="VISUALIZAR PACIENTE">
+			
+			<p:fieldset legend="Filtro de Busca" toggleable="true">					
+						<h:panelGrid columns="1" cellspacing="10">					
+							<h:panelGrid id="filtro_paciente_busca_pn" columns="2">
+								<p:outputLabel for="filtro_paciente_busca"
+									value="Dados para busca: " />
+								<h:panelGrid columns="2">
+									<p:inputText id="filtro_paciente_busca"
+										value="#{pacienteMB.campoInteligenteBusca}"
+										size="80"
+										title="O Sistema inteligente de busca detecta se a busca será por ID, CPF, RG ou Nome. No entanto, deve-se seguir um padrão de busca conforme o exemplo a seguir: # Para buscas pelo ID deve-se digitar apenas números. Para buscas pelo CPF devese digitar os três primeiros dígitos do CPF e em seguida um ponto (123.). # Para buscas pelo RG deve-se digitar o primeiro dígito do RG e em seguida um ponto (1.). # Para buscas pelo Nome deve-se digitar qualquer parte do Nome ou Sobrenome."
+										maxlength="100">
+										<p:ajax event="keyup"
+											update=":#{p:component('tabela_paciente_pn')}"></p:ajax>
+									</p:inputText>
+									<p:watermark for="filtro_paciente_busca"
+										value="Digite parte do Código, CPF (Ex.: 123.), RG (Ex.: 1.) ou do Nome...">
+									</p:watermark>
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGrid>
+				</p:fieldset>
+				<br />				
+			
+			<h:panelGrid id="tabela_paciente_pn" columns="1" width="100%">
+			<p:dataTable id="tabela_paciente"
+					value="#{pacienteMB.buscaInteligente()}" var="paciente"
+					paginator="#{pacienteMB.buscaInteligente().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+					emptyMessage="Nenhum dado encontrado...">
+
+					<f:facet name="header">
+			TABELA DE PACIENTES
+			</f:facet>
+					<p:column>
+						<f:facet name="header">Código</f:facet>
+							#{paciente.idPaciente}
+						</p:column>
+								<p:column>
+									<f:facet name="header">Nome</f:facet>
+							<p:commandLink value="#{paciente.nomeCompleto}" 
+							rendered="#{pacienteMB.isTelefoneAtualizado(paciente) ? 'false' : 'true'}"
+							style="color: #F00; font-weight:bold;cursor:pointer;
+							text-decoration: none;"
+							oncomplete ="dialog_paciente_atualizacao_wv.show()"
+							action="#{pacienteMB.alterarPaciente(paciente)}"
+							update=":#{p:component('dialog_paciente_atualizacao')}"	
+							title="Paciente com dados de Comunicação desatualizados, favor confirmar, com o mesmo, se o Telefone e o Celular são os mesmos.">
+							</p:commandLink>
+							
+							<h:outputText value="#{paciente.nomeCompleto}" 
+							rendered="#{pacienteMB.isTelefoneAtualizado(paciente)}" /> 
+						</p:column>
+								<p:column>
+									<f:facet name="header">Tipo</f:facet>
+							#{paciente.contratante ? 'TITULAR' : 'DEPENDENTE'}
+						</p:column>							
+								<p:column >
+									<f:facet name="header">CPF</f:facet>
+									<h:outputText value="(NÃO POSSUI)" 
+									rendered="#{(paciente.cpf == '000.000.000-00' or paciente.cpf == null) and !paciente.contratante}" 
+									title="Paciente dependente, o CPF não é obrigatório."
+									style="cursor: help"/> 
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{(paciente.cpf != '000.000.000-00' or paciente.cpf != null) and !paciente.contratante}"/>
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{paciente.cpf == '000.000.000-00' and paciente.contratante}" 
+									title="Paciente com CPF inválido, lembre-se de ATUALIZÁ-LO!"
+									style="cursor: help; color:#FF8C00; font-weight: bold"/> 	
+									
+									<h:outputText value="#{paciente.cpf}" 
+									rendered="#{paciente.cpf != '000.000.000-00' and paciente.contratante}"/> 
+						</p:column>			
+						
+								<p:column>
+									<f:facet name="header">Estabelecimento</f:facet>
+							#{paciente.estabelecimentoDTO.nomeEstabelecimentoFormatado}
+						</p:column>
+			
+								<p:column>
+									<f:facet name="header">Telefone</f:facet>
+							#{paciente.telResidencial}
+						</p:column>
+						
+								<p:column>
+									<f:facet name="header">Operadora</f:facet>
+							(#{paciente.operadoraCel01.nomeOperadora}) 
+						</p:column>						
+						
+								<p:column>
+									<f:facet name="header">Celular</f:facet>
+							 #{paciente.cel01}
+						</p:column>						
+					<f:facet name="footer">
+					Total: 
+					#{pacienteMB.buscaInteligente().size()}
+					</f:facet>
+				</p:dataTable>
+				</h:panelGrid>
+				<br />
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:commandButton value="Novo Paciente" icon="ui-icon-plus" 
+					action="cadastrar-paciente"
+					rendered="#{pagesMB.permissaoOperador}"/>
+				
+					<p:commandButton action="manter-paciente" icon="ui-icon-pencil"
+					value="Manter Pacientes" immediate="true"
+					rendered="#{pagesMB.permissaoGestor}"/>	
+				</h:panelGrid>
+			</p:panel>
+
+			<p:dialog id="dialog_paciente_atualizacao" resizable="false" modal="true" 
+			widgetVar="dialog_paciente_atualizacao_wv" 
+			header="ATUALIZAR DADOS DE COMUNICAÇÃO"
+			closeOnEscape="true" hideEffect="drop"
+			showEffect="drop" >
+				<p:fieldset legend="Dados do paciente">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="ID: " />
+						<h:outputText value="#{pacienteMB.pacienteDTO.idPaciente}" />
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{pacienteMB.pacienteDTO.nomeCompleto}" />
+						<h:outputText value="CPF: " />
+						<h:outputText value="#{pacienteMB.pacienteDTO.cpf}" />	
+						<h:outputText value="Estabelecimento: " />	
+						<h:outputText value="#{pacienteMB.pacienteDTO.estabelecimentoDTO.nomeEstabelecimentoFormatado}" />						
+					</h:panelGrid>
+				</p:fieldset>
+				<br />
+				<p:fieldset legend="Dados de Comunicação">
+					<h:panelGrid id="paciente_atualizacao_pn" columns="2" cellpadding="5">
+						<h:outputText value="Email: " />
+						<h:outputText value="#{pacienteMB.pacienteDTO.email}" />
+						
+						<h:outputLabel for="paciente_telefone_alt" value="Telefone: *" />
+						<p:inputMask id="paciente_telefone_alt" mask="(99) 99999-9999" size="15"
+							value="#{pacienteMB.pacienteDTO.telResidencial}">
+						</p:inputMask>
+								
+						<h:outputLabel for="paciente_celular_01_alt" value="Celular (Principal): *" />
+						<h:panelGrid columns="2">
+							<h:selectOneMenu id="paciente_cel01_op_alt"
+								value="#{pacienteMB.pacienteDTO.operadoraCel01}"
+								converter="operadoraConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+									itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('paciente_cel01_op_alt')}"></p:ajax>
+
+							</h:selectOneMenu>							
+							<p:inputMask id="paciente_celular_01_alt" mask="(99) 99999-9999" size="15"
+								value="#{pacienteMB.pacienteDTO.cel01}">
+								</p:inputMask>
+						</h:panelGrid>	
+							
+						<h:outputLabel for="paciente_celular_02_alt" value="Celular (Secundário 01): " />
+						<h:panelGrid columns="2">
+							<h:selectOneMenu id="paciente_cel02_op_alt"
+								value="#{pacienteMB.pacienteDTO.operadoraCel02}"
+								converter="operadoraConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+									itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('paciente_cel02_op_alt')}"></p:ajax>
+
+							</h:selectOneMenu>							
+							<p:inputMask id="paciente_celular_02_alt" mask="(99) 99999-9999" size="15"
+								value="#{pacienteMB.pacienteDTO.cel02}">
+								</p:inputMask>
+						</h:panelGrid>
+							
+						<h:outputLabel for="paciente_celular_03_alt" value="Celular (Secundário 02): " />
+						<h:panelGrid columns="2">
+							<h:selectOneMenu id="paciente_cel03_op_alt"
+								value="#{pacienteMB.pacienteDTO.operadoraCel03}"
+								converter="operadoraConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+									itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('paciente_cel03_op_alt')}"></p:ajax>
+
+							</h:selectOneMenu>							
+							<p:inputMask id="paciente_celular_03_alt" mask="(99) 99999-9999" size="15"
+								value="#{pacienteMB.pacienteDTO.cel03}">
+								</p:inputMask>		
+						</h:panelGrid>				
+					</h:panelGrid>					
+				</p:fieldset>
+				<br />
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:commandButton action="#{pacienteMB.alterar()}"
+					icon="ui-icon-refresh"
+					value="Atualizar" update=":#{p:component('messages')},
+					:#{p:component('tabela_paciente')}, :#{p:component('paciente_atualizacao_pn')}" 
+					oncomplete="dialog_paciente_atualizacao_wv.hide()"/>
+
+					<p:commandButton value="Voltar" icon="ui-icon-arrowrefresh-1-w"
+					onclick="dialog_paciente_atualizacao_wv.hide()"/>
+				</h:panelGrid>
+			</p:dialog>		
+			
+			<p:spacer height="150"/>
+				
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

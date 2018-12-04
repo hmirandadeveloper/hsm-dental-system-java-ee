@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" />
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Caixa | Visualizar Caixa" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="VISUALIZAR MEUS CAIXAS">	
+			<p>Preencha corretamente as informações para visualizar o(s) Caixa(s) abertos por você.</p>
+			<br />
+			<h:panelGrid id="panel_caixa" columns="1" cellpadding="2" width="100%">
+				
+				<p:fieldset legend="Filtro de Busca de Caixas" toggleable="true">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="Data: " />
+						<p:calendar locale="pt" id="caixa_data"
+							maxdate="#{pagesMB.dataAtual}"
+							value="#{caixaMB.caixaDTO.dataCaixa}"
+							pattern="dd/MM/yyyy">
+								<p:ajax event="dateSelect" 
+								update=":#{p:component('panel_caixa')}"/>
+							</p:calendar>
+						</h:panelGrid>
+						<h:panelGrid rendered="#{caixaMB.caixaDTO.dataCaixa != null}" columns="2">
+							<h:outputText value="Caixas: " />
+							<h:selectOneMenu id="operador_caixa"
+								value="#{movimentacaoMB.caixaSelecionadoDTO}"
+								converter="caixaConverter">								
+	
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+	
+								<f:selectItems value="#{caixaMB.buscarCaixasPorUsuarioAberturaEmData()}" 
+									var="caixa" itemLabel="#{caixa.caixaDados}" 
+									itemValue="#{caixa}">
+								</f:selectItems>
+									
+								<p:ajax event="valueChange" update=":#{p:component('panel_caixa')}"></p:ajax>
+	
+							</h:selectOneMenu>
+						</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Informações do Caixa Selecionado" toggleable="true">
+					<h:panelGrid columns="2" cellpadding="5"
+					rendered="#{movimentacaoMB.caixaSelecionadoDTO.idCaixa != null}">
+						<h:outputText value="Estabelecimento: " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.estabelecimentoDTO.nomeEstabelecimentoFormatado}" />
+						<h:outputText value="Data: " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.dataCaixa}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>	
+						<h:outputText value="Número de Ordem: " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.numeroOrdem}" />
+						<h:outputText value="Situação: " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.usuarioFechamento.idUsuario == null ? 'ABERTO' : 'FECHADO'}" />
+						<h:outputText value="Funcionário Abertura: " />	
+						<h:outputText value="#{funcionarioMB.buscarPeloIdUsuario(movimentacaoMB.caixaSelecionadoDTO.usuarioAbertura.idUsuario).nomeCompleto}" />					
+						<h:outputText value="Funcionário Fechamento: " />	
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.usuarioFechamento.idUsuario == null ? 'CAIXA EM ABERTO' : funcionarioMB.buscarPeloIdUsuario(movimentacaoMB.caixaSelecionadoDTO.usuarioFechamento.idUsuario).nomeCompleto}" />						
+						<h:outputText value="Observações: " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.obs}" />
+						<h:outputText value="Valor Total: R$ " />
+						<h:outputText value="#{movimentacaoMB.caixaSelecionadoDTO.valorTotal}" />						
+					</h:panelGrid>
+					<h:outputText value="Nenhum 'Caixa' Selecionado..." 
+					rendered="#{movimentacaoMB.caixaSelecionadoDTO.idCaixa== null}"/>
+				</p:fieldset>
+				
+				<p:fieldset legend="Informações de Movimentações" 
+				rendered="#{movimentacaoMB.caixaSelecionadoDTO.idCaixa != null}">
+					<h:panelGrid columns="1" width="100%">
+						<p:dataTable id="tabela_paciente"
+						value="#{movimentacaoMB.buscarPorCaixaSelecionado()}" var="movimentacao"
+						paginator="#{movimentacaoMB.buscarPorCaixaUsuarioLogado().size() > pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela ? 'true' : 'false'}" rows="#{pagesMB.atributoOperacionalSelecionado.numeroLinhaTabela}"
+						emptyMessage="Nenhum dado encontrado...">
+
+							<f:facet name="header">
+								<h:outputText value="TABELA DE MOVIMENTAÇÕES DO CAIXA"
+								title="Para remover uma movimentação cadastradda incorretamente, favor procurar um Usuário com Perfil de Gestor."/>
+								
+							</f:facet>
+							<p:column width="5%">
+								<f:facet name="header">Ordem</f:facet>
+								#{movimentacaoMB.buscarPorCaixaSelecionado().indexOf(movimentacao) + 1}
+							</p:column>
+							
+							<p:column width="15%">
+								<f:facet name="header">Tipo</f:facet>
+								#{movimentacao.tipo == 'E' ? 'ENTRADA' : 'SAÍDA'}
+							</p:column>	
+							
+							<p:column width="50%">
+								<f:facet name="header">Referência</f:facet>
+								<h:outputText style="font-weight: bold; cursor: help;"
+								title="#{movimentacao.obs == '' ? '' : 'OBSERVAÇÕES: '} #{movimentacao.obs}" value="#{movimentacao.refMovimentacao}" />
+							</p:column>	
+							
+							<p:column width="20%">
+								<f:facet name="header">Valor</f:facet>
+								<h:outputText value="R$ (-) #{movimentacao.valor}" 
+								style="color:#F00" 
+								rendered="#{movimentacao.tipo == 'S' ? 'true' : 'false'}"/> 
+								<h:outputText value="R$ #{movimentacao.valor}" 
+								rendered="#{movimentacao.tipo == 'E' ? 'true' : 'false'}"/>
+							</p:column>
+							
+							<p:column width="10%" rendered="#{pagesMB.permissaoGestor}">
+							<p:commandButton action="#{movimentacaoMB.removerMovimentacao(movimentacao)}" icon="ui-icon-closethick"
+							title="Remover Movimentação"
+							update=":#{p:component('messages')}, 
+							:#{p:component('panel_caixa')}"/>								
+							</p:column>
+							
+							<f:facet name="footer">
+							Total de Movimentações: 
+							#{movimentacaoMB.buscarPorCaixaSelecionado().size()}
+							   |   Valor Total do Caixa Aberto: R$ #{movimentacaoMB.caixaSelecionadoDTO.valorTotal} 
+							  
+							</f:facet>																												
+						</p:dataTable>
+					</h:panelGrid>
+					<br />	
+				</p:fieldset>				
+				<h:panelGrid columns="3">									
+					<p:commandButton action="abrir-caixa" icon="ui-icon-radio-on"
+						value="Abrir Caixa" immediate="true"/>	
+						
+					<p:commandButton action="gerenciar-caixa" icon="ui-icon-gear"
+						value="Gerenciar Caixa Aberto" immediate="true"/>	
+						
+					<p:commandButton action="manter-caixa" icon="ui-icon-pencil"
+						value="Manter Caixas" immediate="true"
+						rendered="#{pagesMB.permissaoGestor}"/>																							
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>
+			
+			<p:dialog id="dialog_movimentacao" resizable="false" modal="true" 
+			widgetVar="dialog_movimentacao_wv" 
+			header="INCLUIR MOVIMENTAÇÃO">
+				<h:panelGrid columns="1" id="dialog_movimentacao_pn">
+					<p:fieldset legend="Dados da Movimentação">
+						<h:panelGrid columns="2">
+							<h:outputText value="Tipo de Movimentação: " />
+							<p:selectOneRadio value="#{movimentacaoMB.movimentacaoDTO.tipo}"
+							disabled="#{pagesMB.permissaoGestor ? 'false' : 'true'}">
+								<f:selectItem itemLabel="Entrada" itemValue="E"/>
+								<f:selectItem itemLabel="Saída" itemValue="S"/>
+							</p:selectOneRadio>
+							
+							<h:outputText value="Referência: *" />
+							<p:inputText id="paciente_nome" maxlength="50" size="50"
+							value="#{movimentacaoMB.movimentacaoDTO.refMovimentacao}" />
+							<h:outputText value="Valor: R$ *" />
+							<p:spinner stepFactor="0.05" value="#{movimentacaoMB.movimentacaoDTO.valor}"/>
+							<p:outputLabel for="movimentacao_obs" value="Observações: "/>
+							<h:panelGrid columns="1">
+								<p:inputTextarea id="movimentacao_obs"
+								maxlength="250"
+								cols="80"
+								rows="8"
+								autoResize="false"
+								counter="movimentacao_obs_display"
+								counterTemplate="{0} caracteres restantes."
+								value="#{movimentacaoMB.movimentacaoDTO.obs}" />	
+								<h:outputText id="movimentacao_obs_display" />	
+							</h:panelGrid>						
+						</h:panelGrid>
+						
+					</p:fieldset>
+					<br />
+					<h:panelGrid columns="2">
+					<p:commandButton value="Incluir "
+							icon="ui-icon-check"
+							oncomplete="dialog_movimentacao_wv.hide()"
+							action="#{movimentacaoMB.salvar()}"
+							update=":#{p:component('messages')}, 
+							:#{p:component('panel_caixa')},
+							:#{p:component('dialog_movimentacao')}">
+					</p:commandButton>					
+										
+					<p:commandButton value="Voltar" icon="ui-icon-arrowrefresh-1-w"
+					onclick="dialog_movimentacao_wv.hide()"/>
+					</h:panelGrid>					
+				</h:panelGrid>
+			</p:dialog>	
+			
+			<p:dialog id="dialog_pag_mensalidade" resizable="false" modal="true" 
+			widgetVar="dialog_pag_mensalidade_wv" 
+			header="PAGAMENTO DE MENSALIDADE">
+				<h:panelGrid columns="1" id="dialog_pag_mensalidade_pn">
+					<p:fieldset legend="Dados do Paciente">
+						
+					</p:fieldset>
+				 	
+				</h:panelGrid>
+			</p:dialog>								
+			
+			<p:spacer height="60"/>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>sodonto-system-web</display-name>
+ <!-- Definição da Pagina inicial -->
+  
+  <welcome-file-list>
+      <welcome-file>pages/protected/index.xhtml</welcome-file>
+  </welcome-file-list>
+  
+ <!-- Configuração do JSF -->  
+  
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>/faces/*</url-pattern>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+  
+  <session-config>
+      <session-timeout>30</session-timeout>
+  </session-config>
+  
+   <!-- Páginas de Erro --> 
+  
+  <error-page>
+      <error-code>403</error-code>
+      <location>/pages/public/error/error403.xhtml</location>
+  </error-page>
+  
+  <error-page>
+      <error-code>404</error-code>
+      <location>/pages/public/error/error404.xhtml</location>
+  </error-page> 
+  
+  <error-page>
+      <error-code>408</error-code>
+      <location>/pages/public/error/error408.xhtml</location>
+  </error-page> 
+  
+  <error-page>
+      <error-code>500</error-code>
+      <location>/pages/public/error/error500.xhtml</location>
+  </error-page> 
+  
+  <!-- Configuração do Primefaces -->    
+  
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>bluesky</param-value>
+  </context-param>
+
+  <!-- Definição do Padrão de Horário -->  
+  
+  <context-param>
+      <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+      <param-value>true</param-value>
+  </context-param>
+  
+  
+    <!-- Área de segurança -->    
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>administrador</web-resource-name>
+            <url-pattern>/pages/protected/administrador/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+        </auth-constraint>
+    </security-constraint>    
+ 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>gestor</web-resource-name>
+            <url-pattern>/pages/protected/gestor/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+        </auth-constraint>
+    </security-constraint>  
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>atendente</web-resource-name>
+            <url-pattern>/pages/protected/atendente/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+            <role-name>O</role-name>
+            <role-name>D</role-name>
+        </auth-constraint>
+    </security-constraint>      
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>atendente-consultorio</web-resource-name>
+            <url-pattern>/pages/protected/atendente-consultorio/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+            <role-name>O</role-name>
+            <role-name>D</role-name>
+            <role-name>C</role-name>
+        </auth-constraint>
+    </security-constraint>  
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>temp</web-resource-name>
+            <url-pattern>/pages/protected/temp/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>T</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>index</web-resource-name>
+            <url-pattern>/pages/protected/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+            <role-name>D</role-name>
+            <role-name>O</role-name>
+            <role-name>T</role-name>
+            <role-name>C</role-name>
+        </auth-constraint>
+    </security-constraint>  
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>operador</web-resource-name>
+            <url-pattern>/pages/protected/operador/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+            <role-name>O</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+        <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>usuario</web-resource-name>
+            <url-pattern>/pages/protected/usuario/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>A</role-name>
+            <role-name>G</role-name>
+            <role-name>D</role-name>
+            <role-name>O</role-name>
+            <role-name>C</role-name>
+        </auth-constraint>
+    </security-constraint> 
+    
+    <!-- Definição dos Roles -->
+  
+    <security-role>
+        <role-name>A</role-name>
+    </security-role>
+    <security-role>
+        <role-name>G</role-name>
+    </security-role>
+    <security-role>
+        <role-name>D</role-name>
+    </security-role>
+    <security-role>
+        <role-name>O</role-name>
+    </security-role>  
+    <security-role>
+        <role-name>C</role-name>
+    </security-role>                   
+    <security-role>
+        <role-name>T</role-name>
+    </security-role>  
+    
+    <!-- Login Form -->
+    
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/pages/public/autenticacao/login.xhtml</form-login-page>
+            <form-error-page>/pages/public/error/loginerror.xhtml</form-error-page>
+        </form-login-config>
+    </login-config> 
+    
+    <!-- Definição dos Filters -->
+    
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>gui.filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/pages/protected/*</url-pattern>
+    </filter-mapping>
+    
+    <filter> 
+        <filter-name>PrimeFaces FileUpload Filter</filter-name> 
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class> 
+    </filter> 
+    <filter-mapping> 
+        <filter-name>PrimeFaces FileUpload Filter</filter-name> 
+        <servlet-name>Faces Servlet</servlet-name> 
+    </filter-mapping>  
+</web-app>

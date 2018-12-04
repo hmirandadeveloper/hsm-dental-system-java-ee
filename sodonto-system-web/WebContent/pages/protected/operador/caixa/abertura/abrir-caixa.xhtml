@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+		
+			<p:defaultCommand target="bt_ir_pages"/>
+					
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Caixa | Abrir Caixa" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />	
+			<p:panel header="ABRIR CAIXA">	
+			<p>Preencha corretamente as informações para Abrir um Novo Caixa</p>
+			<br />
+			<h:panelGrid id="panel_caixa" columns="1" cellpadding="2" width="100%">
+				
+				<p:fieldset legend="Informações do Usuário Logado" toggleable="true">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="ID: " />
+						<h:outputText value="#{caixaMB.funcionarioLogado.idFuncionario}" />
+						<h:outputText value="Nome: " />
+						<h:outputText value="#{caixaMB.funcionarioLogado.nomeCompleto}" />
+						<h:outputText value="CPF: " />
+						<h:outputText value="#{caixaMB.funcionarioLogado.cpf}" />
+						<h:outputText value="Cargo: " />
+						<h:outputText value="#{caixaMB.funcionarioLogado.cargo.nomeCargo}" />
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset legend="Informações do Caixa" >
+					<h:panelGrid columns="2">
+						<p:outputLabel for="caixa_data" value="Data: *" />
+						<p:calendar locale="pt" id="caixa_data"
+							maxdate="#{pagesMB.dataAtual}"
+							mindate="#{pagesMB.dataAtual}"
+							value="#{caixaMB.caixaDTO.dataCaixa}"
+							pattern="dd/MM/yyyy">
+								<p:ajax event="dateSelect" 
+								update=":#{p:component('panel_caixa')},
+								:#{p:component('caixa_info_pn')},
+								:#{p:component('messages')}"
+								listener="#{caixaMB.permissaoAbrirCaixa()}"/>
+							</p:calendar>
+					</h:panelGrid>
+					
+					<h:panelGrid id="caixa_info_pn" columns="2"
+					rendered="#{caixaMB.caixaDTO.dataCaixa != null and caixaMB.permissaoAbrirCaixa() ? 'true' : 'false'}">
+							
+							<h:outputText value="Número de Ordem: " />
+							<h:outputText value="#{caixaMB.buscarCaixasPorMaxOrdemData()}" />
+							
+							<h:outputLabel for="caixa_estabelecimento" value="Estabelecimento: *" />							
+							<h:selectOneMenu id="caixa_estabelecimento"
+								value="#{caixaMB.caixaDTO.estabelecimentoDTO}"
+								converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('caixa_info_pn')}"></p:ajax>
+
+							</h:selectOneMenu>	
+							
+						<p:outputLabel for="caixa_obs" value="Observações: "/>
+						<h:panelGrid columns="1">
+						<p:inputTextarea id="caixa_obs"
+							maxlength="250"
+							cols="80"
+							rows="8"
+							autoResize="false"
+							counter="caixa_obs_display"
+							counterTemplate="{0} caracteres restantes."
+							value="#{caixaMB.caixaDTO.obs}" />	
+							<h:outputText id="caixa_obs_display" />	
+						</h:panelGrid>
+						<p:commandButton action="#{caixaMB.abrirCaixa()}" icon="ui-icon-disk"
+						value="Abrir Caixa" update="messages, :#{p:component('panel_caixa')}" />	
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid columns="2">									
+					<p:commandButton action="manter-caixa" icon="ui-icon-pencil"
+						value="Gerenciar Caixas" immediate="true"/>
+												
+				</h:panelGrid>					
+			</h:panelGrid>
+			</p:panel>
+			<p:spacer height="50"/>	
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

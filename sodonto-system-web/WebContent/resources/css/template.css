@@ -1,0 +1,158 @@
+@CHARSET "ISO-8859-1";
+
+div.root
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	padding: 0px; 
+	width: 100%;
+	font-family: arial;
+}
+
+div.cabecalho
+{
+	position: relative; 
+	width: 100%; 
+	height: 101px; 
+	top: 0px; 
+	vertical-align: 10px; 
+	margin: 0px; 
+	left: 0px; 
+	background-image: url("../resources/images/top.png");
+}
+
+div.painel
+{
+	position: relative;
+	top: 1px;
+	left: 0px;
+	width: 100%;
+	height: 30px;
+	background-image: url("../resources/images/painel.png");
+	color: #FFF;
+	padding: 0px;
+}
+
+table.painel
+{
+	width: 100%;
+	height: 100%;
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+td.pn_painel
+{
+	width: 40%;
+}
+
+.usuario
+{
+	font-weight: bold;
+}
+
+.nm_usuario
+{
+	font-style: italic;
+	padding-right: 20px;
+}
+
+td.pn_usuario
+{
+	width: 10%;
+	text-align: right;
+}
+
+td.pn_usuario
+{
+	width: 1%;
+	text-align: left;
+}
+
+td.pn_botao
+{
+	width: 5%;
+	text-align: right;
+}
+
+.bt_sair
+{
+	height: 25px;
+	font-size: 10px;
+}
+
+.conteudo
+{
+	width: 200px;
+	font-size: 13px;
+	margin-top: 5px;
+	margin-bottom: 30px;
+}
+table.conteudo
+{
+	width: 100%;
+}
+
+td.menu
+{
+	vertical-align: top;
+	width: 15%;
+}
+
+td.conteudo
+{
+	width: 85%;
+	vertical-align: top;
+}
+
+div.menu_inf
+{
+	position: fixed; 
+	width: 100%; 
+	height: 31px; 
+	left: 0px; 
+	bottom: 32px; 
+}
+
+div.rodape
+{
+	position: fixed; 
+	width: 100%; 
+	height: 31px; 
+	left: 0px; 
+	padding-top: 2px;
+	bottom: 0px; 
+	background-image: url("../resources/images/bottom.png");
+}
+
+table.rodape
+{
+	top: -1px;
+	margin-top: 0px;
+	width: 100%; 
+	color: #FFF; 
+	font-family: arial;
+}
+
+.hsm
+{
+	height: 29px;
+	text-align: center;
+	font-size: 9px;
+	font-weight: bold;
+	border-left-style: ridge;
+	border-left-width: 1px;
+	border-color: #77B8D7;
+	color: #000;
+	width: 20%;
+}
+
+.copy
+{
+	width: 80%; 
+	text-align: left;
+	font-size: 13px; 
+	padding-top: 5px;
+	padding-left: 10px;
+}

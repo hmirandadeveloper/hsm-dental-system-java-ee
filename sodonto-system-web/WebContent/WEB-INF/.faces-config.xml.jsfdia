@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::0" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="index-protected::#pages#protected#index.xhtml" NAME="output"
+    PATH="/pages/protected/index.xhtml"
+    TARGET="rules:#pages#protected#index.xhtml" TITLE="index-protected" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::1" SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::1" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="nova-agenda::#pages#protected#gestor#agenda-dentista#cadastrar#cadastrar-agenda.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/agenda-dentista/cadastrar/cadastrar-agenda.xhtml"
+    TARGET="rules:#pages#protected#gestor#agenda-dentista#cadastrar#cadastrar-agenda.xhtml"
+    TITLE="nova-agenda" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::2" SHAPE="32,241,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::2" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-agenda::#pages#protected#gestor#agenda-dentista#manter#manter-agenda.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/agenda-dentista/manter/manter-agenda.xhtml"
+    TARGET="rules:#pages#protected#gestor#agenda-dentista#manter#manter-agenda.xhtml"
+    TITLE="manter-agenda" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::3" SHAPE="32,353,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::3" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-agendamento::#pages#protected#atendente-consultorio#agendamento#gestao#gerenciar-agendamento.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente-consultorio/agendamento/gestao/gerenciar-agendamento.xhtml"
+    TARGET="rules:#pages#protected#atendente-consultorio#agendamento#gestao#gerenciar-agendamento.xhtml"
+    TITLE="gerenciar-agendamento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::4" SHAPE="32,465,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::4" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-agendamento::#pages#protected#atendente-consultorio#agendamento#visualizar#visualizar-agendamento.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente-consultorio/agendamento/visualizar/visualizar-agendamento.xhtml"
+    TARGET="rules:#pages#protected#atendente-consultorio#agendamento#visualizar#visualizar-agendamento.xhtml"
+    TITLE="visualizar-agendamento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::5" SHAPE="32,577,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::5" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-atendimento::#pages#protected#atendente-consultorio#atendimento#visualizar#visualizar-atendimento.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente-consultorio/atendimento/visualizar/visualizar-atendimento.xhtml"
+    TARGET="rules:#pages#protected#atendente-consultorio#atendimento#visualizar#visualizar-atendimento.xhtml"
+    TITLE="visualizar-atendimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::6" SHAPE="32,689,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::6" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-atributo-operacional::#pages#protected#administrador#atributo-operacional#cadastrar#cadastrar-atributo-operacional.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/atributo-operacional/cadastrar/cadastrar-atributo-operacional.xhtml"
+    TARGET="rules:#pages#protected#administrador#atributo-operacional#cadastrar#cadastrar-atributo-operacional.xhtml"
+    TITLE="cadastrar-atributo-operacional" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::7" SHAPE="32,801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::7" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-atributo-operacional::#pages#protected#administrador#atributo-operacional#manter#manter-atributo-operacional.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/atributo-operacional/manter/manter-atributo-operacional.xhtml"
+    TARGET="rules:#pages#protected#administrador#atributo-operacional#manter#manter-atributo-operacional.xhtml"
+    TITLE="manter-atributo-operacional" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::8" SHAPE="32,913,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::8" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-atributo-operacional::#pages#protected#administrador#atributo-operacional#gerenciar#gerenciar-atributo-operacional.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/atributo-operacional/gerenciar/gerenciar-atributo-operacional.xhtml"
+    TARGET="rules:#pages#protected#administrador#atributo-operacional#gerenciar#gerenciar-atributo-operacional.xhtml"
+    TITLE="gerenciar-atributo-operacional" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::9" SHAPE="32,1025,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::9" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-provedor-sms::#pages#protected#administrador#provedor-sms#gerenciar#gerenciar-provedor-sms.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/provedor-sms/gerenciar/gerenciar-provedor-sms.xhtml"
+    TARGET="rules:#pages#protected#administrador#provedor-sms#gerenciar#gerenciar-provedor-sms.xhtml"
+    TITLE="gerenciar-provedor-sms" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::10" SHAPE="32,1137,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::10" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="abrir-caixa::#pages#protected#operador#caixa#abertura#abrir-caixa.xhtml"
+    NAME="output"
+    PATH="/pages/protected/operador/caixa/abertura/abrir-caixa.xhtml"
+    TARGET="rules:#pages#protected#operador#caixa#abertura#abrir-caixa.xhtml"
+    TITLE="abrir-caixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::11" SHAPE="32,1249,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::11" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-caixa::#pages#protected#operador#caixa#gestao#gerenciar-caixa.xhtml"
+    NAME="output"
+    PATH="/pages/protected/operador/caixa/gestao/gerenciar-caixa.xhtml"
+    TARGET="rules:#pages#protected#operador#caixa#gestao#gerenciar-caixa.xhtml"
+    TITLE="gerenciar-caixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::12" SHAPE="32,1361,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::12" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-caixa::#pages#protected#gestor#caixa#manter#manter-caixa.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/caixa/manter/manter-caixa.xhtml"
+    TARGET="rules:#pages#protected#gestor#caixa#manter#manter-caixa.xhtml"
+    TITLE="manter-caixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::13" SHAPE="32,1473,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::13" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-caixa::#pages#protected#operador#caixa#visualizar#visualizar-caixa.xhtml"
+    NAME="output"
+    PATH="/pages/protected/operador/caixa/visualizar/visualizar-caixa.xhtml"
+    TARGET="rules:#pages#protected#operador#caixa#visualizar#visualizar-caixa.xhtml"
+    TITLE="visualizar-caixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::14" SHAPE="32,1585,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::14" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-dentista::#pages#protected#gestor#dentista#cadastrar#cadastrar-dentista.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/dentista/cadastrar/cadastrar-dentista.xhtml"
+    TARGET="rules:#pages#protected#gestor#dentista#cadastrar#cadastrar-dentista.xhtml"
+    TITLE="cadastrar-dentista" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::15" SHAPE="32,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::15" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-dentista::#pages#protected#gestor#dentista#manter#manter-dentista.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/dentista/manter/manter-dentista.xhtml"
+    TARGET="rules:#pages#protected#gestor#dentista#manter#manter-dentista.xhtml"
+    TITLE="manter-dentista" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::16" SHAPE="32,1809,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::16" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="vincular-especialidade::#pages#protected#gestor#dentista#vincular-especializacao#vincular-especializacao.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/dentista/vincular-especializacao/vincular-especializacao.xhtml"
+    TARGET="rules:#pages#protected#gestor#dentista#vincular-especializacao#vincular-especializacao.xhtml"
+    TITLE="vincular-especialidade" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::17" SHAPE="32,1921,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::17" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-estabelecimento::#pages#protected#gestor#estabelecimento#cadastrar#cadastrar-estabelecimento.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/estabelecimento/cadastrar/cadastrar-estabelecimento.xhtml"
+    TARGET="rules:#pages#protected#gestor#estabelecimento#cadastrar#cadastrar-estabelecimento.xhtml"
+    TITLE="cadastrar-estabelecimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::18" SHAPE="32,2033,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::18" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-estabelecimento::#pages#protected#gestor#estabelecimento#manter#manter-estabelecimento.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/estabelecimento/manter/manter-estabelecimento.xhtml"
+    TARGET="rules:#pages#protected#gestor#estabelecimento#manter#manter-estabelecimento.xhtml"
+    TITLE="manter-estabelecimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::19" SHAPE="32,2145,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::19" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-funcionario::#pages#protected#gestor#funcionario#cadastrar#cadastrar-funcionario.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/funcionario/cadastrar/cadastrar-funcionario.xhtml"
+    TARGET="rules:#pages#protected#gestor#funcionario#cadastrar#cadastrar-funcionario.xhtml"
+    TITLE="cadastrar-funcionario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::20" SHAPE="32,2257,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::20" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-funcionario::#pages#protected#gestor#funcionario#manter#manter-funcionario.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/funcionario/manter/manter-funcionario.xhtml"
+    TARGET="rules:#pages#protected#gestor#funcionario#manter#manter-funcionario.xhtml"
+    TITLE="manter-funcionario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::21" SHAPE="32,2369,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::21" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-log-operacional::#pages#protected#administrador#log-operacional#visualizar#visualizar-log-operacional.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/log-operacional/visualizar/visualizar-log-operacional.xhtml"
+    TARGET="rules:#pages#protected#administrador#log-operacional#visualizar#visualizar-log-operacional.xhtml"
+    TITLE="visualizar-log-operacional" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::22" SHAPE="32,2481,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::22" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-paciente::#pages#protected#atendente#paciente#cadastrar#cadastrar-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente/paciente/cadastrar/cadastrar-paciente.xhtml"
+    TARGET="rules:#pages#protected#atendente#paciente#cadastrar#cadastrar-paciente.xhtml"
+    TITLE="cadastrar-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::23" SHAPE="32,2593,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::23" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-paciente::#pages#protected#operador#paciente#manter#manter-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/operador/paciente/manter/manter-paciente.xhtml"
+    TARGET="rules:#pages#protected#operador#paciente#manter#manter-paciente.xhtml"
+    TITLE="manter-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::24" SHAPE="32,2705,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::24" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="vincular-plano::#pages#protected#operador#paciente#plano#vincular-plano.xhtml"
+    NAME="output"
+    PATH="/pages/protected/operador/paciente/plano/vincular-plano.xhtml"
+    TARGET="rules:#pages#protected#operador#paciente#plano#vincular-plano.xhtml"
+    TITLE="vincular-plano" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::25" SHAPE="32,2817,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::25" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-paciente::#pages#protected#atendente#paciente#visualizar#visualizar-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente/paciente/visualizar/visualizar-paciente.xhtml"
+    TARGET="rules:#pages#protected#atendente#paciente#visualizar#visualizar-paciente.xhtml"
+    TITLE="visualizar-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::26" SHAPE="32,2929,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::26" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-agendamento-paciente::#pages#protected#atendente#paciente#visualizar#visualizar-agendamento-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente/paciente/visualizar/visualizar-agendamento-paciente.xhtml"
+    TARGET="rules:#pages#protected#atendente#paciente#visualizar#visualizar-agendamento-paciente.xhtml"
+    TITLE="visualizar-agendamento-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::27" SHAPE="32,3041,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::27" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="visualizar-atendimento-paciente::#pages#protected#atendente#paciente#visualizar#visualizar-atendimento-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente/paciente/visualizar/visualizar-atendimento-paciente.xhtml"
+    TARGET="rules:#pages#protected#atendente#paciente#visualizar#visualizar-atendimento-paciente.xhtml"
+    TITLE="visualizar-atendimento-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::28" SHAPE="32,3153,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::28" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="enviar-torpedo-paciente::#pages#protected#atendente#paciente#torpedo#enviar-torpedo-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/atendente/paciente/torpedo/enviar-torpedo-paciente.xhtml"
+    TARGET="rules:#pages#protected#atendente#paciente#torpedo#enviar-torpedo-paciente.xhtml"
+    TITLE="enviar-torpedo-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::29" SHAPE="32,3265,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::29" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-provedor-sms::#pages#protected#administrador#provedor-sms#gerenciar#gerenciar-provedor-sms.xhtml"
+    NAME="output"
+    PATH="/pages/protected/administrador/provedor-sms/gerenciar/gerenciar-provedor-sms.xhtml"
+    TARGET="rules:#pages#protected#administrador#provedor-sms#gerenciar#gerenciar-provedor-sms.xhtml"
+    TITLE="gerenciar-provedor-sms" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::30" SHAPE="32,3377,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::30" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-agendamento-cancelado::#pages#protected#gestor#relatorio#rl-agendamento-cancelado#rl-agendamento-cancelado.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-agendamento-cancelado/rl-agendamento-cancelado.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-agendamento-cancelado#rl-agendamento-cancelado.xhtml"
+    TITLE="rl-agendamento-cancelado" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::31" SHAPE="32,3489,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::31" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-atendimento-finalizado::#pages#protected#gestor#relatorio#rl-atendimento-finalizado#rl-atendimento-finalizado.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-atendimento-finalizado/rl-atendimento-finalizado.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-atendimento-finalizado#rl-atendimento-finalizado.xhtml"
+    TITLE="rl-atendimento-finalizado" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::32" SHAPE="32,3601,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::32" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-atendimento-dentista::#pages#protected#gestor#relatorio#rl-atendimento-dentista#rl-atendimento-dentista.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-atendimento-dentista/rl-atendimento-dentista.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-atendimento-dentista#rl-atendimento-dentista.xhtml"
+    TITLE="rl-atendimento-dentista" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::33" SHAPE="32,3713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::33" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-marcacao-volta::#pages#protected#gestor#relatorio#rl-marcacao-volta#rl-marcacao-volta.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-marcacao-volta/rl-marcacao-volta.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-marcacao-volta#rl-marcacao-volta.xhtml"
+    TITLE="rl-marcacao-volta" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::34" SHAPE="32,3825,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::34" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-paciente-agendado::#pages#protected#gestor#relatorio#rl-paciente-agendado#rl-paciente-agendado.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-paciente-agendado/rl-paciente-agendado.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-paciente-agendado#rl-paciente-agendado.xhtml"
+    TITLE="rl-paciente-agendado" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::35" SHAPE="32,3937,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::35" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-paciente-faltoso::#pages#protected#gestor#relatorio#rl-paciente-faltoso#rl-paciente-faltoso.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-paciente-faltoso/rl-paciente-faltoso.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-paciente-faltoso#rl-paciente-faltoso.xhtml"
+    TITLE="rl-paciente-faltoso" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::36" SHAPE="32,4049,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::36" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-paciente-nao-reagendado::#pages#protected#gestor#relatorio#rl-paciente-nao-reagendado#rl-paciente-nao-reagendado.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-paciente-nao-reagendado/rl-paciente-nao-reagendado.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-paciente-nao-reagendado#rl-paciente-nao-reagendado.xhtml"
+    TITLE="rl-paciente-nao-reagendado" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::37" SHAPE="32,4161,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::37" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="rl-plano-paciente::#pages#protected#gestor#relatorio#rl-plano-paciente#rl-plano-paciente.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/relatorio/rl-plano-paciente/rl-plano-paciente.xhtml"
+    TARGET="rules:#pages#protected#gestor#relatorio#rl-plano-paciente#rl-plano-paciente.xhtml"
+    TITLE="rl-plano-paciente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::38" SHAPE="32,4273,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::38" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-cargo::#pages#protected#gestor#cargo#cadastrar#cadastrar-cargo.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/cargo/cadastrar/cadastrar-cargo.xhtml"
+    TARGET="rules:#pages#protected#gestor#cargo#cadastrar#cadastrar-cargo.xhtml"
+    TITLE="cadastrar-cargo" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::39" SHAPE="32,4385,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::39" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-cargo::#pages#protected#gestor#cargo#manter#manter-cargo.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/cargo/manter/manter-cargo.xhtml"
+    TARGET="rules:#pages#protected#gestor#cargo#manter#manter-cargo.xhtml"
+    TITLE="manter-cargo" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::40" SHAPE="32,4497,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::40" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-especialidade::#pages#protected#gestor#especializacao-dentista#cadastrar#cadastrar-especializacao-dentista.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/especializacao-dentista/cadastrar/cadastrar-especializacao-dentista.xhtml"
+    TARGET="rules:#pages#protected#gestor#especializacao-dentista#cadastrar#cadastrar-especializacao-dentista.xhtml"
+    TITLE="cadastrar-especialidade" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#operadora-celular#manter#manter-operadora.xhtml"
+  PATH="/pages/protected/gestor/operadora-celular/manter/manter-operadora.xhtml"
+  SHAPE="240,4065,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#mensagem#email#cadastrar#cadastrar-msg-email.xhtml"
+  PATH="/pages/protected/gestor/mensagem/email/cadastrar/cadastrar-msg-email.xhtml"
+  SHAPE="240,3505,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#cargo#manter#manter-cargo.xhtml"
+  PATH="/pages/protected/gestor/cargo/manter/manter-cargo.xhtml"
+  SHAPE="240,3169,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#agenda-dentista#manter#manter-agenda.xhtml"
+  PATH="/pages/protected/gestor/agenda-dentista/manter/manter-agenda.xhtml"
+  SHAPE="240,257,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-plano-paciente#rl-plano-paciente.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-plano-paciente/rl-plano-paciente.xhtml"
+  SHAPE="240,2945,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#cargo#cadastrar#cadastrar-cargo.xhtml"
+  PATH="/pages/protected/gestor/cargo/cadastrar/cadastrar-cargo.xhtml"
+  SHAPE="240,3057,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente#paciente#visualizar#visualizar-agendamento-paciente.xhtml"
+  PATH="/pages/protected/atendente/paciente/visualizar/visualizar-agendamento-paciente.xhtml"
+  SHAPE="240,2385,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#usuario#manter#alterar-senha.xhtml"
+  PATH="/pages/protected/usuario/manter/alterar-senha.xhtml"
+  SHAPE="240,4401,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#funcionario#cadastrar#cadastrar-funcionario.xhtml"
+  PATH="/pages/protected/gestor/funcionario/cadastrar/cadastrar-funcionario.xhtml"
+  SHAPE="240,1713,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente#paciente#visualizar#visualizar-atendimento-paciente.xhtml"
+  PATH="/pages/protected/atendente/paciente/visualizar/visualizar-atendimento-paciente.xhtml"
+  SHAPE="240,2497,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-agendamento-cancelado#rl-agendamento-cancelado.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-agendamento-cancelado/rl-agendamento-cancelado.xhtml"
+  SHAPE="240,2609,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#estabelecimento#cadastrar#cadastrar-estabelecimento.xhtml"
+  PATH="/pages/protected/gestor/estabelecimento/cadastrar/cadastrar-estabelecimento.xhtml"
+  SHAPE="240,1489,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#dentista#vincular-especializacao#vincular-especializacao.xhtml"
+  PATH="/pages/protected/gestor/dentista/vincular-especializacao/vincular-especializacao.xhtml"
+  SHAPE="240,1377,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#agenda-dentista#cadastrar#cadastrar-agenda.xhtml"
+  PATH="/pages/protected/gestor/agenda-dentista/cadastrar/cadastrar-agenda.xhtml"
+  SHAPE="240,145,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#operador#paciente#manter#manter-paciente.xhtml"
+  PATH="/pages/protected/operador/paciente/manter/manter-paciente.xhtml"
+  SHAPE="240,2049,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#temporario#ativacao#ativar-usuario.xhtml"
+  PATH="/pages/protected/temporario/ativacao/ativar-usuario.xhtml"
+  SHAPE="240,4513,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-atendimento-dentista#rl-atendimento-dentista.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-atendimento-dentista/rl-atendimento-dentista.xhtml"
+  SHAPE="240,2833,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#estabelecimento#manter#manter-estabelecimento.xhtml"
+  PATH="/pages/protected/gestor/estabelecimento/manter/manter-estabelecimento.xhtml"
+  SHAPE="240,1601,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#especializacao-dentista#manter#manter-especializacao-dentista.xhtml"
+  PATH="/pages/protected/gestor/especializacao-dentista/manter/manter-especializacao-dentista.xhtml"
+  SHAPE="240,3393,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#caixa#manter#manter-caixa.xhtml"
+  PATH="/pages/protected/gestor/caixa/manter/manter-caixa.xhtml"
+  SHAPE="240,929,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#funcionario#manter#manter-funcionario.xhtml"
+  PATH="/pages/protected/gestor/funcionario/manter/manter-funcionario.xhtml"
+  SHAPE="240,1825,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#dentista#cadastrar#cadastrar-dentista.xhtml"
+  PATH="/pages/protected/gestor/dentista/cadastrar/cadastrar-dentista.xhtml"
+  SHAPE="240,1153,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#mensagem#email#manter#manter-msg-email.xhtml"
+  PATH="/pages/protected/gestor/mensagem/email/manter/manter-msg-email.xhtml"
+  SHAPE="240,3617,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente#paciente#visualizar#visualizar-paciente.xhtml"
+  PATH="/pages/protected/atendente/paciente/visualizar/visualizar-paciente.xhtml"
+  SHAPE="240,2273,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#operador#caixa#gestao#gerenciar-caixa.xhtml"
+  PATH="/pages/protected/operador/caixa/gestao/gerenciar-caixa.xhtml"
+  SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#protected#index.xhtml"
+  PATH="/pages/protected/index.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#mensagem#torpedo#manter#manter-msg-torpedo.xhtml"
+  PATH="/pages/protected/gestor/mensagem/torpedo/manter/manter-msg-torpedo.xhtml"
+  SHAPE="240,3841,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#dentista#manter#manter-dentista.xhtml"
+  PATH="/pages/protected/gestor/dentista/manter/manter-dentista.xhtml"
+  SHAPE="240,1265,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#operador#caixa#visualizar#visualizar-caixa.xhtml"
+  PATH="/pages/protected/operador/caixa/visualizar/visualizar-caixa.xhtml"
+  SHAPE="240,1041,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-atendimento-finalizado#rl-atendimento-finalizado.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-atendimento-finalizado/rl-atendimento-finalizado.xhtml"
+  SHAPE="240,2721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#operador#caixa#abertura#abrir-caixa.xhtml"
+  PATH="/pages/protected/operador/caixa/abertura/abrir-caixa.xhtml"
+  SHAPE="240,705,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#usuario#manter#alterar-dados.xhtml"
+  PATH="/pages/protected/usuario/manter/alterar-dados.xhtml"
+  SHAPE="240,4289,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#especializacao-dentista#cadastrar#cadastrar-especializacao-dentista.xhtml"
+  PATH="/pages/protected/gestor/especializacao-dentista/cadastrar/cadastrar-especializacao-dentista.xhtml"
+  SHAPE="240,3281,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#plano#gestao#gerenciar-plano.xhtml"
+  PATH="/pages/protected/gestor/plano/gestao/gerenciar-plano.xhtml"
+  SHAPE="240,4177,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#operadora-celular#cadastrar#cadastrar-operadora.xhtml"
+  PATH="/pages/protected/gestor/operadora-celular/cadastrar/cadastrar-operadora.xhtml"
+  SHAPE="240,3953,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#mensagem#torpedo#cadastrar#cadastrar-msg-torpedo.xhtml"
+  PATH="/pages/protected/gestor/mensagem/torpedo/cadastrar/cadastrar-msg-torpedo.xhtml"
+  SHAPE="240,3729,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#operador#paciente#plano#vincular-plano.xhtml"
+  PATH="/pages/protected/operador/paciente/plano/vincular-plano.xhtml"
+  SHAPE="240,2161,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::41" SHAPE="32,4833,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::41" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-especialidade::#pages#protected#gestor#especializacao-dentista#manter#manter-especializacao-dentista.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/especializacao-dentista/manter/manter-especializacao-dentista.xhtml"
+    TARGET="rules:#pages#protected#gestor#especializacao-dentista#manter#manter-especializacao-dentista.xhtml"
+    TITLE="manter-especialidade" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::42" SHAPE="32,4609,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::42" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-msg-email::#pages#protected#gestor#mensagem#email#cadastrar#cadastrar-msg-email.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/mensagem/email/cadastrar/cadastrar-msg-email.xhtml"
+    TARGET="rules:#pages#protected#gestor#mensagem#email#cadastrar#cadastrar-msg-email.xhtml"
+    TITLE="cadastrar-msg-email" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::43" SHAPE="32,4721,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::43" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-msg-email::#pages#protected#gestor#mensagem#email#manter#manter-msg-email.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/mensagem/email/manter/manter-msg-email.xhtml"
+    TARGET="rules:#pages#protected#gestor#mensagem#email#manter#manter-msg-email.xhtml"
+    TITLE="manter-msg-email" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-paciente-faltoso#rl-paciente-faltoso.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-paciente-faltoso/rl-paciente-faltoso.xhtml"
+  SHAPE="240,4849,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-paciente-agendado#rl-paciente-agendado.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-paciente-agendado/rl-paciente-agendado.xhtml"
+  SHAPE="240,4737,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-marcacao-volta#rl-marcacao-volta.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-marcacao-volta/rl-marcacao-volta.xhtml"
+  SHAPE="240,4625,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente#paciente#cadastrar#cadastrar-paciente.xhtml"
+  PATH="/pages/protected/atendente/paciente/cadastrar/cadastrar-paciente.xhtml"
+  SHAPE="240,1937,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente-consultorio#agendamento#visualizar#visualizar-agendamento.xhtml"
+  PATH="/pages/protected/atendente-consultorio/agendamento/visualizar/visualizar-agendamento.xhtml"
+  SHAPE="240,481,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente-consultorio#agendamento#gestao#gerenciar-agendamento.xhtml"
+  PATH="/pages/protected/atendente-consultorio/agendamento/gestao/gerenciar-agendamento.xhtml"
+  SHAPE="240,369,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente-consultorio#atendimento#visualizar#visualizar-atendimento.xhtml"
+  PATH="/pages/protected/atendente-consultorio/atendimento/visualizar/visualizar-atendimento.xhtml"
+  SHAPE="240,593,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::44" SHAPE="32,4945,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::44" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-msg-torpedo::#pages#protected#gestor#mensagem#torpedo#cadastrar#cadastrar-msg-torpedo.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/mensagem/torpedo/cadastrar/cadastrar-msg-torpedo.xhtml"
+    TARGET="rules:#pages#protected#gestor#mensagem#torpedo#cadastrar#cadastrar-msg-torpedo.xhtml"
+    TITLE="cadastrar-msg-torpedo" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::45" SHAPE="32,5057,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::45" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-msg-torpedo::#pages#protected#gestor#mensagem#torpedo#manter#manter-msg-torpedo.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/mensagem/torpedo/manter/manter-msg-torpedo.xhtml"
+    TARGET="rules:#pages#protected#gestor#mensagem#torpedo#manter#manter-msg-torpedo.xhtml"
+    TITLE="manter-msg-torpedo" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#administrador#atributo-operacional#cadastrar#cadastrar-atributo-operacional.xhtml"
+  PATH="/pages/protected/administrador/atributo-operacional/cadastrar/cadastrar-atributo-operacional.xhtml"
+  SHAPE="240,705,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#administrador#atributo-operacional#gerenciar#gerenciar-atributo-operacional.xhtml"
+  PATH="/pages/protected/administrador/atributo-operacional/gerenciar/gerenciar-atributo-operacional.xhtml"
+  SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::46" SHAPE="32,5169,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::46" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="cadastrar-operadora::#pages#protected#gestor#operadora-celular#cadastrar#cadastrar-operadora.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/operadora-celular/cadastrar/cadastrar-operadora.xhtml"
+    TARGET="rules:#pages#protected#gestor#operadora-celular#cadastrar#cadastrar-operadora.xhtml"
+    TITLE="cadastrar-operadora" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#atendente#paciente#torpedo#enviar-torpedo-paciente.xhtml"
+  PATH="/pages/protected/atendente/paciente/torpedo/enviar-torpedo-paciente.xhtml"
+  SHAPE="240,4961,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::47" SHAPE="32,5281,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::47" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manter-operadora::#pages#protected#gestor#operadora-celular#manter#manter-operadora.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/operadora-celular/manter/manter-operadora.xhtml"
+    TARGET="rules:#pages#protected#gestor#operadora-celular#manter#manter-operadora.xhtml"
+    TITLE="manter-operadora" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#administrador#provedor-sms#gerenciar#gerenciar-provedor-sms.xhtml"
+  PATH="/pages/protected/administrador/provedor-sms/gerenciar/gerenciar-provedor-sms.xhtml"
+  SHAPE="240,5073,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::48" SHAPE="32,5393,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::48" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="gerenciar-plano::#pages#protected#gestor#plano#gestao#gerenciar-plano.xhtml"
+    NAME="output"
+    PATH="/pages/protected/gestor/plano/gestao/gerenciar-plano.xhtml"
+    TARGET="rules:#pages#protected#gestor#plano#gestao#gerenciar-plano.xhtml"
+    TITLE="gerenciar-plano" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#administrador#atributo-operacional#manter#manter-atributo-operacional.xhtml"
+  PATH="/pages/protected/administrador/atributo-operacional/manter/manter-atributo-operacional.xhtml"
+  SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::49" SHAPE="32,5505,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::49" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="alterar-dados::#pages#protected#usuario#manter#alterar-dados.xhtml"
+    NAME="output"
+    PATH="/pages/protected/usuario/manter/alterar-dados.xhtml"
+    TARGET="rules:#pages#protected#usuario#manter#alterar-dados.xhtml"
+    TITLE="alterar-dados" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules::50" SHAPE="32,5617,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::50" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="alterar-senha::#pages#protected#usuario#manter#alterar-senha.xhtml"
+    NAME="output"
+    PATH="/pages/protected/usuario/manter/alterar-senha.xhtml"
+    TARGET="rules:#pages#protected#usuario#manter#alterar-senha.xhtml"
+    TITLE="alterar-senha" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#administrador#log-operacional#visualizar#visualizar-log-operacional.xhtml"
+  PATH="/pages/protected/administrador/log-operacional/visualizar/visualizar-log-operacional.xhtml"
+  SHAPE="240,2385,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::51" SHAPE="32,5729,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::51" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="ativar-usuario::#pages#protected#temporario#ativacao#ativar-usuario.xhtml"
+    NAME="output"
+    PATH="/pages/protected/temporario/ativacao/ativar-usuario.xhtml"
+    TARGET="rules:#pages#protected#temporario#ativacao#ativar-usuario.xhtml"
+    TITLE="ativar-usuario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#pages#protected#gestor#relatorio#rl-paciente-nao-reagendado#rl-paciente-nao-reagendado.xhtml"
+  PATH="/pages/protected/gestor/relatorio/rl-paciente-nao-reagendado/rl-paciente-nao-reagendado.xhtml"
+  SHAPE="240,5185,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

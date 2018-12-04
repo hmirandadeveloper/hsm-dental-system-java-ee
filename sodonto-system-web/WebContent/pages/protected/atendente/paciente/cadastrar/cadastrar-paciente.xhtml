@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+			<p:defaultCommand target="bt_ir_pages"/>
+			
+			<p:growl id="messages" sticky="true"/>
+			<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton title="Home" icon="ui-icon-home" action="index-protected" immediate="true"></p:commandButton>
+				<p:separator></p:separator>
+				<h:outputText value="Home | Paciente | Cadastrar Paciente" style="font-size: 10px" />
+			</p:toolbarGroup>
+			
+				<p:toolbarGroup id="tb_pages" rendered="#{pagesMB.keyValidation.active}"  align="right">
+					<p:separator/>
+					<p:spacer width="5"/>
+					
+					<h:outputText value="Smart Menu: "
+					title="Smart Menu: Menu Inteligente para busca rápida de Páginas do Sistema"
+					style="cursor: help;"/>
+					<p:autoComplete
+					title="Digite no mínimo 03 caracteres da PÁGINA que deseja acessar, para que o SMART MENU, filtre todos os Componentes relacionados com a sua busca, de forma rápida e eficiente." 
+					value="#{pagesMB.pageSelected}"
+					completeMethod="#{pagesMB.allPages}"
+					var="page"
+					itemLabel="#{page.nome}"
+					itemValue="#{page}" 
+					size="40"
+					maxResults="5"
+					minQueryLength="3"
+					forceSelection="true">
+						<p:ajax event="itemSelect" update="bt_ir_pages"/>
+						<p:ajax event="keyup" update="bt_ir_pages"/>
+					</p:autoComplete>
+					<p:spacer width="5"/>
+
+					<p:commandButton id="bt_ir_pages" title="Ir para Página" 
+					disabled="#{pagesMB.pageSelected == null}"
+					icon="ui-icon-circle-triangle-e" 
+					action="#{pagesMB.irParaPagina()}"
+					widgetVar="bt_smart_menu_wv" onclick="bt_smart_menu_wv.disable()"/>
+
+				</p:toolbarGroup>			
+			</p:toolbar>
+			<br />
+			<p:panel id="painel_paciente" header="CADASTRAR PACIENTE">
+				<p>Preencha corretamente as informações para cadastrar um Paciente. Após cadastrado o Paciente deverá verificar<br />
+				 o seu Email para confirmar se os seus dados cadastrados estão corretos.				
+				</p>
+				<br />
+				<p:tabView id="paciente_tab" effect="slide">
+
+					<p:tab id="iformacoes_pessoais_tab" title="Informações Pessoais">
+						<h:panelGrid id="informacoes_paciente_pn" columns="2" cellspacing="10">
+							<h:outputText title="Cuidado ao modificar essa opção, pois perderá todos os dados já cadastrados!" 
+							value="Paciente Titular: " />
+							<p:selectOneRadio id="paciente_titular_rd" 
+							value="#{pacienteMB.pacienteDTO.contratante}">
+								<f:selectItem itemLabel="Sim" itemValue="true"/>
+								<f:selectItem itemLabel="Não" itemValue="false"/>
+								<p:ajax event="change" listener="#{pacienteMB.isTitular()}"
+								update=":#{p:component('paciente_tab')}"/>
+							</p:selectOneRadio>						
+						
+							<h:outputLabel for="paciente_id" value="ID: *" rendered="#{pagesMB.permissaoAdministrador}"/>
+							<h:panelGrid id="panel_id_paciente" columns="4">
+								<p:inputText id="paciente_id" maxlength="20" size="20"
+								rendered="#{pagesMB.permissaoAdministrador}"
+								value="#{pacienteMB.pacienteDTO.idPaciente}" 
+								disabled="#{!pacienteMB.IDHabilitado}"
+								title="Dexando esse campo vazio, o Sistema criará o ID do Paciente automaticamente, seguindo a ordem padrão."/>
+								
+								<p:spacer width="5" rendered="#{pagesMB.permissaoAdministrador}"/>
+								
+								<p:commandButton value="ID" icon="ui-icon-key"
+								action="#{pacienteMB.habilitarID()}" update="panel_id_paciente, :#{p:component('messages')}"
+								rendered="#{!pacienteMB.IDHabilitado and pagesMB.permissaoAdministrador}"
+								title="Habilitar a inserção de ID para Pacientes, lembre-se de utilizar essa opção, apenas, se for realmente necessário."
+								widgetVar="bt_id_paciente_hab_wv" onclick="bt_id_paciente_hab_wv.disable()"/>
+								
+								<p:commandButton value="ID" icon="ui-icon-locked"
+								action="#{pacienteMB.desabilitarID()}" update="panel_id_paciente, :#{p:component('messages')}"
+								rendered="#{pacienteMB.IDHabilitado and pagesMB.permissaoAdministrador}"
+								title="Desabilitar a inserção de ID para Pacientes."
+								widgetVar="bt_id_paciente_des_wv" onclick="bt_id_paciente_des_wv.disable()"/>								
+							</h:panelGrid>
+							
+							<h:outputLabel for="paciente_nome" value="Nome: *" />
+							<p:inputText id="paciente_nome" maxlength="50" size="50"
+								value="#{pacienteMB.pacienteDTO.nome}" />
+
+							<h:outputLabel for="paciente_sobrenome" value="Sobrenome: *" />
+							<p:inputText id="paciente_sobrenome"  size="100"
+								maxlength="100" value="#{pacienteMB.pacienteDTO.sobrenome}" />									
+								
+						</h:panelGrid>
+						
+						<h:panelGrid id="informacoes_contratante_pn" columns="2" cellspacing="10"
+						rendered="#{pacienteMB.pacienteDTO.contratante ? 'true' : false}">	
+							<h:outputLabel for="paciente_cpf" value="CPF: *" />
+							<p:inputMask id="paciente_cpf" mask="999.999.999-99"
+								value="#{pacienteMB.pacienteDTO.cpf}" />							
+								
+							<h:outputLabel for="paciente_rg" value="R.G: " />
+							<h:panelGrid columns="3">
+								<p:inputMask id="paciente_rg" mask="9.999.999" size="8"
+									value="#{pacienteMB.pacienteDTO.rg}" />
+								<p:inputMask id="paciente_rg_orgao" mask="aaa" size="3"
+									value="#{pacienteMB.pacienteDTO.rgOrgao}" />
+									
+							<h:selectOneMenu id="paciente_rg_uf"
+								value="#{pacienteMB.pacienteDTO.rgUf}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.ufs}" var="uf"
+									itemLabel="#{uf}" itemValue="#{uf}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('paciente_rg_uf')}"></p:ajax>
+
+							</h:selectOneMenu>										
+									
+							</h:panelGrid>		
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o paciente, encontra-se na última aba." />
+					</p:tab>
+					
+					<p:tab title="Outras Informações">
+						<h:panelGrid id="informacoes_paciente_outras_pn" columns="2" cellspacing="10">
+
+							<h:outputLabel for="paciente_estabelecimento" value="Estabelecimento: *" />							
+							<h:selectOneMenu id="paciente_estabelecimento"
+								value="#{pacienteMB.pacienteDTO.estabelecimentoDTO}"
+								converter="estabelecimentoConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{estabelecimentoMB.estabelecimentos}" 
+									var="estabelecimento" itemLabel="#{estabelecimento.nomeEstabelecimentoFormatado}" 
+									itemValue="#{estabelecimento}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('informacoes_paciente_outras_pn')}"></p:ajax>
+
+							</h:selectOneMenu>
+							
+							<h:outputLabel for="paciente_dentista" value="Dentista: *" />							
+							<h:selectOneMenu id="paciente_dentista"
+								value="#{pacienteMB.pacienteDTO.dentistaDTO}"
+								converter="dentistaConverter">								
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{dentistaMB.dentistas}" 
+									var="dentista" itemLabel="#{dentista.nomeComCROFormatado}" 
+									itemValue="#{dentista}">
+								</f:selectItems>
+								
+								<p:ajax event="valueChange" update=":#{p:component('informacoes_paciente_outras_pn')}"></p:ajax>
+
+							</h:selectOneMenu>
+							
+							<h:outputText value="Estado Civil: *" />
+							<h:selectOneMenu id="paciente_est_civil"
+								value="#{pacienteMB.pacienteDTO.estadoCivil}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.estadosCivis}" var="estadosCivil"
+									itemLabel="#{estadosCivil}" itemValue="#{estadosCivil}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('paciente_est_civil')}"></p:ajax>
+
+							</h:selectOneMenu>							
+								
+							<h:outputText value="Sexo: *" />
+							<p:selectOneRadio id="paciente_sexo_rd" value="#{pacienteMB.pacienteDTO.sexo}">
+								<f:selectItem itemLabel="Masculino" itemValue="M"/>
+								<f:selectItem itemLabel="Feminino" itemValue="F"/>
+							</p:selectOneRadio>
+							
+							<h:outputText value="Data de Nascimento: *" />
+							<p:inputMask mask="99/99/9999" value="#{pacienteMB.pacienteDTO.dataNascimento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</p:inputMask>									
+								
+						</h:panelGrid>					
+					</p:tab>
+					
+					<p:tab id="informacoes_contratante_tab" title="Informações do Titular"
+					rendered="#{pacienteMB.pacienteDTO.contratante ? 'false' : 'true'}">
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputText value="Buscar Paciente: " />
+							<p:commandButton icon="ui-icon-search" oncomplete="dialog_paciente_titular_wv.show()"/>
+						</h:panelGrid>
+						<p:fieldset id="informacoes_titular_fs" legend="Informações do Paciente Titular"
+						rendered="#{pacienteMB.pacienteDTO.paciente.idPaciente != null ? 'true' : 'false'}">
+							<h:panelGrid id="informacoes_titular_pn"
+							columns="2"
+							cellpadding="5">
+								<h:outputText value="Código: " />
+								<h:outputText value="#{pacienteMB.pacienteDTO.paciente.idPaciente}" />
+								<h:outputText value="Nome: " />
+								<h:outputText value="#{pacienteMB.pacienteDTO.paciente.nomeCompleto}" />
+								<h:outputText value="CPF: " />
+								<h:outputText value="#{pacienteMB.pacienteDTO.paciente.cpf}" />
+								<h:outputText value="Telefone: " />
+								<h:outputText value="#{pacienteMB.pacienteDTO.paciente.telResidencial}" />
+								<h:outputText value="Celular: " />
+								<h:panelGrid columns="2">
+									<h:outputText value="#{pacienteMB.pacienteDTO.paciente.operadoraCel01.nomeOperadora}" />
+									<h:outputText value="#{pacienteMB.pacienteDTO.paciente.cel01}" />
+								</h:panelGrid>
+							</h:panelGrid>
+							<br />
+							<br />
+							<span style="font-weight:bold;">Obs.:</span> Para Desvincular o Titular, deve-se acessar a 'Primeira Aba (Informações Pessoais)' e marcar a Caixa de Checagem: Paciente Titular <br />
+							como 'Sim'.
+						</p:fieldset>
+						<br />
+						<br />
+					</p:tab>
+
+					<p:tab title="Informações de Comunicação">
+						<h:panelGrid columns="2" cellspacing="10">
+							<h:outputLabel for="paciente_email" value="Email: *" />
+							<p:inputText id="paciente_email" size="50" maxlength="50"
+								value="#{pacienteMB.pacienteDTO.email}" />
+
+							<h:outputLabel for="paciente_telefone" value="Telefone: *" />
+							<p:inputMask id="paciente_telefone" mask="(99) 99999-9999" size="15"
+								value="#{pacienteMB.pacienteDTO.telResidencial}" />
+								
+							<h:outputLabel for="paciente_celular_01" value="Celular (Principal): *" />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="paciente_cel01_op"
+									value="#{pacienteMB.pacienteDTO.operadoraCel01}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('paciente_cel01_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="paciente_celular_01" mask="(99) 99999-9999" size="15"
+									value="#{pacienteMB.pacienteDTO.cel01}" />
+							</h:panelGrid>	
+							
+							<h:outputLabel for="paciente_celular_02" value="Celular (Secundário 01): " />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="paciente_cel02_op"
+									value="#{pacienteMB.pacienteDTO.operadoraCel02}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('paciente_cel02_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="paciente_celular" mask="(99) 99999-9999" size="15"
+									value="#{pacienteMB.pacienteDTO.cel02}" />
+							</h:panelGrid>
+							
+							<h:outputLabel for="paciente_celular_03" value="Celular (Secundário 02): " />
+							<h:panelGrid columns="2">
+								<h:selectOneMenu id="paciente_cel03_op"
+									value="#{pacienteMB.pacienteDTO.operadoraCel03}"
+									converter="operadoraConverter">								
+
+									<f:selectItem itemLabel="Escolha uma opção"
+										noSelectionOption="true" />
+
+									<f:selectItems value="#{operadoraMB.operadorasFiltrados}" var="operadora"
+										itemLabel="#{operadora.nomeOperadora}" itemValue="#{operadora}">
+									</f:selectItems>
+								
+									<p:ajax event="valueChange" update=":#{p:component('paciente_cel03_op')}"></p:ajax>
+
+								</h:selectOneMenu>							
+								<p:inputMask id="paciente_celular_03" mask="(99) 99999-9999" size="15"
+									value="#{pacienteMB.pacienteDTO.cel03}" />
+							</h:panelGrid>																					
+						</h:panelGrid>
+						<br />
+						<br />
+						<h:outputText value="Obs.: O botão para salvar o paciente, encontra-se na última aba." />
+					</p:tab>
+					
+					<p:tab title="Informações do Endereço">
+						<h:panelGrid id="paciente_endereco" columns="2" cellspacing="10">
+							<p:outputLabel for="paciente_endereco_logradouro" value="Logradouro: " />
+							<p:inputText id="paciente_endereco_logradouro" 
+								maxlength="150" size="100"
+								value="#{pacienteMB.pacienteDTO.endereco.logradouro}" />
+
+							<p:outputLabel for="paciente_endereco_numero" value="Numero: " />
+							<p:inputText id="paciente_endereco_numero" mask="99999"
+								value="#{pacienteMB.pacienteDTO.endereco.numero}" />
+								
+							<p:outputLabel for="paciente_endereco_complemento" value="Complemento: " />
+							<p:inputText id="paciente_endereco_complemento"
+								maxlength="300" size="100"
+								value="#{pacienteMB.pacienteDTO.endereco.complemento}" />
+								
+							<p:outputLabel for="paciente_endereco_bairro" value="Bairro: " />
+							<p:inputText id="paciente_endereco_bairro" 
+								value="#{pacienteMB.pacienteDTO.endereco.bairro}" />
+								
+							<p:outputLabel for="paciente_endereco_cidade" value="Cidade: " />
+							<p:inputText id="paciente_endereco_cidade" 
+								value="#{pacienteMB.pacienteDTO.endereco.cidade}" />
+								
+							<p:outputLabel for="paciente_endereco_uf" value="UF: " />
+							<h:selectOneMenu id="paciente_endereco_uf"
+								value="#{pacienteMB.pacienteDTO.endereco.uf}">
+
+								<f:selectItem itemLabel="Escolha uma opção"
+									noSelectionOption="true" />
+
+								<f:selectItems value="#{pagesMB.ufs}" var="uf"
+									itemLabel="#{uf}" itemValue="#{uf}">
+								</f:selectItems>
+
+								<p:ajax event="valueChange" update=":#{p:component('paciente_endereco_uf')}"></p:ajax>
+
+							</h:selectOneMenu>
+								
+							<p:outputLabel for="paciente_endereco_cep" value="CEP: " />
+							<p:inputMask id="paciente_endereco_cep" mask="99.999-999"
+								value="#{pacienteMB.pacienteDTO.endereco.cep}" />																																															
+						</h:panelGrid>
+						<br />
+						<br />
+						<p:commandButton action="#{pacienteMB.salvar()}" icon="ui-icon-disk"
+							value="Salvar Paciente" update=":#{p:component('messages')}, :#{p:component('painel_paciente')} " 
+							widgetVar="bt_salvar_paciente_wv" onclick="bt_salvar_paciente_wv.disable()"/>											
+					</p:tab>										
+				</p:tabView>
+				<p:spacer height="10"/>
+				<br />
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:commandButton action="manter-paciente" icon="ui-icon-pencil"
+					value="Manter Pacientes" immediate="true"
+					rendered="#{pagesMB.permissaoGestor}"/>	
+					
+					<p:commandButton action="visualizar-paciente" icon="ui-icon-person"
+					value="Visualizar Pacientes" immediate="true"/>						
+				</h:panelGrid>
+			</p:panel>
+				<p:spacer height="150"/>
+				
+			<p:dialog id="dialog_paciente_titular" resizable="false" modal="true" 
+			widgetVar="dialog_paciente_titular_wv" 
+			header="BUSCA DE PACIENTE TITULAR">
+			<h:panelGrid columns="1" id="dialog_paciente_titular_pn">
+			<p:fieldset legend="Filtro de Busca" toggleable="true">					
+						<h:panelGrid columns="1" cellspacing="10">					
+							<h:panelGrid id="filtro_paciente_titular_busca_pn" columns="2">
+								<p:outputLabel for="filtro_paciente_titular_busca"
+									value="Dados para busca: " />
+								<h:panelGrid columns="2">
+									<p:inputText id="filtro_paciente_titular_busca"
+										value="#{pacienteMB.campoInteligenteBuscaTitular}"
+										size="80"
+										title="O Sistema inteligente de busca detecta se a busca será por ID, CPF, RG ou Nome. No entanto, deve-se seguir um padrão de busca conforme o exemplo a seguir: # Para buscas pelo ID deve-se digitar apenas números. Para buscas pelo CPF devese digitar os três primeiros dígitos do CPF e em seguida um ponto (123.). # Para buscas pelo RG deve-se digitar o primeiro dígito do RG e em seguida um ponto (1.). # Para buscas pelo Nome deve-se digitar qualquer parte do Nome ou Sobrenome."
+										maxlength="100">
+										<p:ajax event="keyup"
+											update=":#{p:component('dialog_paciente_titular_ls_pn')}"></p:ajax>
+									</p:inputText>
+									<p:watermark for="filtro_paciente_titular_busca"
+										value="Digite parte do Código, CPF (Ex.: 123.), RG (Ex.: 1.) ou do Nome...">
+									</p:watermark>
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGrid>
+				</p:fieldset>
+				<br />	 			
+				<p:fieldset legend="Lista de pacientes">
+					<h:panelGrid id="dialog_paciente_titular_ls_pn" columns="2">	
+						<p:dataTable id="tabela_paciente_titular"
+							value="#{pacienteMB.buscaInteligenteTitular()}" var="paciente"
+							paginator="true" rows="5"
+							emptyMessage="Nenhum dado encontrado...">
+		
+							<f:facet name="header">
+						TABELA DE PACIENTES
+						</f:facet>
+								<p:column>
+									<f:facet name="header">Código</f:facet>
+							#{paciente.idPaciente}
+						</p:column>
+								<p:column>
+									<f:facet name="header">Nome</f:facet>
+							#{paciente.nomeCompleto}
+						</p:column>
+								<p:column>
+									<f:facet name="header">CPF</f:facet>
+							#{paciente.cpf}
+						</p:column>			
+						
+								<p:column>
+									<f:facet name="header">Estabelecimento</f:facet>
+							#{paciente.estabelecimentoDTO.nomeEstabelecimentoFormatado}
+						</p:column>
+			
+								<p:column>
+									<f:facet name="header">Telefone</f:facet>
+							#{paciente.telResidencial}
+						</p:column>
+						
+								<p:column>
+									<f:facet name="header">Celular</f:facet>
+							( #{paciente.operadoraCel01.nomeOperadora} ) 
+							 #{paciente.cel01}
+						</p:column>
+												
+								<p:column>
+									<p:commandButton value="Selecionar "
+									icon="ui-icon-flag"
+										immediate="true"
+										oncomplete="dialog_paciente_titular_wv.hide()"
+										action="#{pacienteMB.selecionarPaciente(paciente)}"
+										update=":#{p:component('messages')}, 
+										:#{p:component('paciente_tab')}">
+									</p:commandButton>
+								</p:column>				
+							<f:facet name="footer">
+							Total: 
+							#{pacienteMB.buscaInteligenteTitular().size()}
+							</f:facet>
+						</p:dataTable>	
+											
+					</h:panelGrid>								
+				</p:fieldset>
+				
+				<h:panelGrid columns="2">					
+				<p:commandButton value="Voltar" 
+				onclick="dialog_paciente_titular_wv.hide()"/>				
+				</h:panelGrid>
+				 
+			</h:panelGrid>
+			</p:dialog>				
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
